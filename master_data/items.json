@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "data": [
+    {
+      "id": "potion",
+      "name": "ポーション",
+      "description": "味方単体のHPを30回復",
+      "type": "potion",
+      "target": "ally",
+      "battleUsable": true,
+      "maxStack": 99,
+      "effect": { "kind": "heal_hp", "power": 30 }
+    },
+    {
+      "id": "ether",
+      "name": "エーテル",
+      "description": "味方単体のMPを20回復",
+      "type": "ether",
+      "target": "ally",
+      "battleUsable": true,
+      "maxStack": 99,
+      "effect": { "kind": "heal_mp", "power": 20 }
+    },
+    {
+      "id": "elixir",
+      "name": "エリクサー",
+      "description": "味方単体のHP/MPを全回復",
+      "type": "elixir",
+      "target": "ally",
+      "battleUsable": true,
+      "maxStack": 99,
+      "effect": { "kind": "heal_full", "power": 0 }
+    }
+  ]
+}

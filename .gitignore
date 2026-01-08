@@ -1,0 +1,57 @@
+# =========================
+# RPG Battle (monorepo) .gitignore
+# - Node.js (server/client)
+# - Vite (client)
+# - TypeScript build artifacts
+# - Local env / logs / IDE settings
+# =========================
+
+# --- dependencies ---
+**/node_modules/
+
+# --- build output ---
+**/dist/
+**/build/
+
+# --- Vite / tooling caches ---
+**/.vite/
+**/.cache/
+**/.turbo/
+**/.parcel-cache/
+
+# --- logs ---
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# --- environment files (keep examples) ---
+**/.env
+**/.env.*
+!**/.env.example
+!**/env.example
+
+# --- OS / editor ---
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+.vscode/
+.idea/
+
+# Cursor / other editor state
+.cursor/
+
+# --- TypeScript incremental build info ---
+**/*.tsbuildinfo
+
+# --- temporary / misc ---
+*.tmp
+*.temp
+*.swp
+*.swo
+*.bak
+
+

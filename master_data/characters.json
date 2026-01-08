@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "data": [
+    {
+      "id": "hero",
+      "name": "勇者",
+      "description": "バランス型。物理も魔法もこなせる。",
+      "imageKey": "hero",
+      "baseStats": { "maxHp": 110, "maxMp": 35, "atk": 15, "matk": 12, "def": 12, "speed": 11 },
+      "growthPerLevel": { "maxHp": 9, "maxMp": 3, "atk": 2, "matk": 2, "def": 2, "speed": 1 },
+      "initialSkillIds": ["attack_basic"],
+      "learnableSkillIds": ["slash", "fireball", "heal_small", "haste_buff"],
+      "tags": ["balanced"]
+    },
+    {
+      "id": "warrior",
+      "name": "戦士",
+      "description": "物理と防御に優れるが魔法は苦手。",
+      "imageKey": "warrior",
+      "baseStats": { "maxHp": 140, "maxMp": 10, "atk": 20, "matk": 5, "def": 16, "speed": 9 },
+      "growthPerLevel": { "maxHp": 12, "maxMp": 1, "atk": 3, "matk": 0, "def": 3, "speed": 1 },
+      "initialSkillIds": ["attack_basic"],
+      "learnableSkillIds": ["slash", "guard", "power_strike"],
+      "tags": ["physical"]
+    },
+    {
+      "id": "mage",
+      "name": "魔法使い",
+      "description": "魔法攻撃が得意。全体魔法を扱うが打たれ弱い。",
+      "imageKey": "mage",
+      "baseStats": { "maxHp": 80, "maxMp": 70, "atk": 6, "matk": 22, "def": 8, "speed": 12 },
+      "growthPerLevel": { "maxHp": 6, "maxMp": 6, "atk": 1, "matk": 4, "def": 1, "speed": 1 },
+      "initialSkillIds": ["fireball"],
+      "learnableSkillIds": ["fireball", "ice_storm", "poison_cloud"],
+      "tags": ["magical"]
+    },
+    {
+      "id": "priest",
+      "name": "僧侶",
+      "description": "回復と蘇生を担う。攻撃はほぼ行わない。",
+      "imageKey": "priest",
+      "baseStats": { "maxHp": 95, "maxMp": 65, "atk": 8, "matk": 15, "def": 10, "speed": 10 },
+      "growthPerLevel": { "maxHp": 7, "maxMp": 5, "atk": 1, "matk": 3, "def": 2, "speed": 1 },
+      "initialSkillIds": ["heal_small"],
+      "learnableSkillIds": ["heal_small", "revive", "haste_buff"],
+      "tags": ["heal"]
+    },
+    {
+      "id": "knight",
+      "name": "騎士",
+      "description": "HPと防御が高く、支援スキルを多く使えるが攻撃力は低い。",
+      "imageKey": "knight",
+      "baseStats": { "maxHp": 150, "maxMp": 25, "atk": 12, "matk": 8, "def": 20, "speed": 9 },
+      "growthPerLevel": { "maxHp": 11, "maxMp": 2, "atk": 1, "matk": 1, "def": 3, "speed": 1 },
+      "initialSkillIds": ["guard"],
+      "learnableSkillIds": ["guard", "heal_small", "haste_buff"],
+      "tags": ["tank", "support"]
+    },
+    {
+      "id": "warlock",
+      "name": "呪術師",
+      "description": "状態異常とバフ/デバフを得意とするが攻撃力は低い。",
+      "imageKey": "warlock",
+      "baseStats": { "maxHp": 90, "maxMp": 60, "atk": 9, "matk": 16, "def": 9, "speed": 11 },
+      "growthPerLevel": { "maxHp": 7, "maxMp": 5, "atk": 1, "matk": 3, "def": 1, "speed": 1 },
+      "initialSkillIds": ["poison_touch"],
+      "learnableSkillIds": ["poison_touch", "poison_cloud", "haste_buff"],
+      "tags": ["debuff"]
+    },
+    {
+      "id": "thief",
+      "name": "盗賊",
+      "description": "speedと会心率が高く、一部状態異常やヒールを扱う。",
+      "imageKey": "thief",
+      "baseStats": { "maxHp": 100, "maxMp": 25, "atk": 14, "matk": 9, "def": 10, "speed": 16 },
+      "growthPerLevel": { "maxHp": 8, "maxMp": 2, "atk": 2, "matk": 1, "def": 1, "speed": 2 },
+      "initialSkillIds": ["attack_basic"],
+      "learnableSkillIds": ["attack_basic", "poison_touch", "heal_small", "slash"],
+      "tags": ["fast", "crit"]
+    }
+  ]
+}

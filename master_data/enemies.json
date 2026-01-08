@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "data": [
+    {
+      "id": "slime_a",
+      "name": "スライム",
+      "imageKey": "slime_01",
+      "baseCost": 8,
+      "appearMinFloor": 1,
+      "appearMaxFloor": 15,
+      "isBoss": false,
+      "baseStats": { "maxHp": 50, "maxMp": 0, "atk": 8, "matk": 0, "def": 5, "speed": 6 },
+      "growthPerLevel": { "maxHp": 5, "maxMp": 0, "atk": 1, "matk": 0, "def": 1, "speed": 1 },
+      "skillIds": ["attack_basic"],
+      "aiProfile": { "type": "default" }
+    },
+    {
+      "id": "goblin",
+      "name": "ゴブリン",
+      "imageKey": "goblin_01",
+      "baseCost": 12,
+      "appearMinFloor": 5,
+      "appearMaxFloor": 30,
+      "isBoss": false,
+      "baseStats": { "maxHp": 70, "maxMp": 0, "atk": 12, "matk": 0, "def": 8, "speed": 10 },
+      "growthPerLevel": { "maxHp": 6, "maxMp": 0, "atk": 2, "matk": 0, "def": 1, "speed": 1 },
+      "skillIds": ["slash"],
+      "aiProfile": { "type": "default" }
+    },
+    {
+      "id": "orc",
+      "name": "オーク",
+      "imageKey": "orc_01",
+      "baseCost": 18,
+      "appearMinFloor": 15,
+      "appearMaxFloor": 50,
+      "isBoss": false,
+      "baseStats": { "maxHp": 110, "maxMp": 0, "atk": 18, "matk": 0, "def": 12, "speed": 9 },
+      "growthPerLevel": { "maxHp": 9, "maxMp": 0, "atk": 3, "matk": 0, "def": 2, "speed": 1 },
+      "skillIds": ["power_strike"],
+      "aiProfile": { "type": "default" }
+    },
+    {
+      "id": "sorcerer",
+      "name": "ソーサラー",
+      "imageKey": "sorcerer_01",
+      "baseCost": 20,
+      "appearMinFloor": 20,
+      "appearMaxFloor": 60,
+      "isBoss": false,
+      "baseStats": { "maxHp": 80, "maxMp": 40, "atk": 10, "matk": 20, "def": 9, "speed": 12 },
+      "growthPerLevel": { "maxHp": 7, "maxMp": 4, "atk": 1, "matk": 3, "def": 1, "speed": 1 },
+      "skillIds": ["fireball", "ice_storm"],
+      "aiProfile": { "type": "default" }
+    },
+    {
+      "id": "wyvern",
+      "name": "ワイバーン",
+      "imageKey": "wyvern_01",
+      "baseCost": 26,
+      "appearMinFloor": 30,
+      "appearMaxFloor": 80,
+      "isBoss": false,
+      "baseStats": { "maxHp": 130, "maxMp": 20, "atk": 22, "matk": 12, "def": 14, "speed": 15 },
+      "growthPerLevel": { "maxHp": 10, "maxMp": 2, "atk": 3, "matk": 2, "def": 2, "speed": 2 },
+      "skillIds": ["slash", "poison_touch"],
+      "aiProfile": { "type": "default" }
+    },
+    {
+      "id": "dragon_boss",
+      "name": "ドラゴン",
+      "imageKey": "dragon_01",
+      "baseCost": 60,
+      "appearMinFloor": 10,
+      "appearMaxFloor": 100,
+      "isBoss": true,
+      "baseStats": { "maxHp": 400, "maxMp": 50, "atk": 40, "matk": 25, "def": 30, "speed": 18 },
+      "growthPerLevel": { "maxHp": 20, "maxMp": 3, "atk": 5, "matk": 3, "def": 4, "speed": 2 },
+      "skillIds": ["slash", "fireball", "poison_cloud"],
+      "aiProfile": { "type": "aggressive", "multiAction": true }
+    }
+  ]
+}

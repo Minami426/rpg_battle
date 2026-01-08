@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "data": [
+    {
+      "id": "burn",
+      "name": "火傷",
+      "conditionType": "dot",
+      "stat": "hp",
+      "value": 8,
+      "valueType": "add",
+      "duration": 3
+    },
+    {
+      "id": "poison",
+      "name": "毒",
+      "conditionType": "dot",
+      "stat": "hp",
+      "value": 6,
+      "valueType": "add",
+      "duration": 3
+    },
+    {
+      "id": "buff_speed",
+      "name": "ヘイスト",
+      "conditionType": "buff",
+      "stat": "speed",
+      "value": 0.2,
+      "valueType": "multiply",
+      "duration": 3
+    },
+    {
+      "id": "guard_state",
+      "name": "防御",
+      "conditionType": "buff",
+      "stat": "def",
+      "value": 0.5,
+      "valueType": "multiply",
+      "duration": 1
+    }
+  ]
+}
