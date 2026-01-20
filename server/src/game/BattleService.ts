@@ -94,12 +94,15 @@ export class BattleService {
       })),
     };
     if (state.winner === "party") {
-      const exp = calcExpReward(state.floor);
-      deltaState.exp = exp;
-      state.log.push(`勝利！ 経験値 ${exp} を獲得（3人で等分想定）`);
+      const expStockAdd = calcExpReward({
+        enemies: state.enemies.map((e) => ({ level: e.level, baseExp: e.baseExp })),
+      });
+      deltaState.expStockAdd = expStockAdd;
+      state.log.push(`勝利！ 経験値ストック +${expStockAdd}`);
     } else if (state.winner === "enemies") {
       deltaState.gameOver = true;
       deltaState.resetState = true; // クライアントはこの後 /api/state/reset を呼ぶ想定
+      state.log.push(`敗北……`);
       state.log.push(`全滅した……`);
     }
     return { state, deltaState };
@@ -114,6 +117,10 @@ export class BattleService {
       const stats = scalePlayerStats(m?.baseStats, m?.growthPerLevel, level);
       const hp = st?.hp ?? stats.maxHp;
       const mp = st?.mp ?? stats.maxMp;
+      const learnedSkillIds =
+        (Array.isArray(st?.skillIds) && st.skillIds.length > 0)
+          ? st.skillIds
+          : (Array.isArray(m?.initialSkillIds) ? m.initialSkillIds : []);
       return {
         id: `pc_${id}_${idx}`,
         name: m?.name ?? id,
@@ -124,7 +131,7 @@ export class BattleService {
         currentMp: mp,
         conditions: [],
         guard: false,
-        skillIds: m?.learnableSkillIds ?? ["attack_basic"],
+        skillIds: learnedSkillIds.length > 0 ? learnedSkillIds : ["attack_basic"],
       };
     });
   }

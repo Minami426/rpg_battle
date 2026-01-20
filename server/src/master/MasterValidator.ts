@@ -15,6 +15,17 @@ export function validateMasters(masters: Masters) {
     for (const sid of c.learnableSkillIds ?? []) {
       if (!skillIds.has(sid)) throw new Error(`[master] character ${c.id} learnableSkillIds missing skill ${sid}`);
     }
+    if (c.skillLearnLevels) {
+      for (const [sid, level] of Object.entries(c.skillLearnLevels)) {
+        if (!skillIds.has(sid)) throw new Error(`[master] character ${c.id} skillLearnLevels missing skill ${sid}`);
+        if (!Array.isArray(c.learnableSkillIds) || !c.learnableSkillIds.includes(sid)) {
+          throw new Error(`[master] character ${c.id} skillLearnLevels includes non-learnable skill ${sid}`);
+        }
+        if (typeof level !== "number" || !Number.isFinite(level) || level < 1) {
+          throw new Error(`[master] character ${c.id} skillLearnLevels invalid level for ${sid}`);
+        }
+      }
+    }
   }
 
   // skills conditions

@@ -36,6 +36,42 @@
       "value": 0.5,
       "valueType": "multiply",
       "duration": 1
+    },
+    {
+      "id": "buff_atk",
+      "name": "攻撃上昇",
+      "conditionType": "buff",
+      "stat": "atk",
+      "value": 0.2,
+      "valueType": "multiply",
+      "duration": 3
+    },
+    {
+      "id": "buff_def",
+      "name": "守備上昇",
+      "conditionType": "buff",
+      "stat": "def",
+      "value": 0.2,
+      "valueType": "multiply",
+      "duration": 3
+    },
+    {
+      "id": "buff_matk",
+      "name": "魔力上昇",
+      "conditionType": "buff",
+      "stat": "matk",
+      "value": 0.2,
+      "valueType": "multiply",
+      "duration": 3
+    },
+    {
+      "id": "regen",
+      "name": "リジェネ",
+      "conditionType": "buff",
+      "stat": "hp",
+      "value": -10,
+      "valueType": "add",
+      "duration": 3
     }
   ]
 }

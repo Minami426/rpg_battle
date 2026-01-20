@@ -24,7 +24,7 @@ const login = async () => {
 </script>
 
 <template>
-  <div class="panel">
+  <form class="panel" @submit.prevent="login">
     <h1>ログイン</h1>
     <div class="field">
       <label>ユーザー名</label>
@@ -35,15 +35,15 @@ const login = async () => {
       <input type="password" v-model="password" />
     </div>
     <div class="actions">
-      <button @click="login">ログイン</button>
-      <button @click="router.push('/register')">新規登録へ</button>
+      <button type="submit">ログイン</button>
+      <button type="button" @click="router.push('/register')">新規登録へ</button>
     </div>
     <p v-if="error" class="error">{{ error }}</p>
-  </div>
+  </form>
 </template>
 
 <style scoped>
-.panel { max-width: 360px; margin: 0 auto; background: #222; padding: 16px; border: 1px solid #444; }
+.panel { max-width: 360px; margin: 0 auto; background: #222; padding: 16px; border: 1px solid #444; height: 840px; overflow: hidden; display: flex; flex-direction: column; }
 .field { margin-bottom: 12px; display: flex; flex-direction: column; }
 .actions { display: flex; gap: 8px; }
 .error { color: #f66; }

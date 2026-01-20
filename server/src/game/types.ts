@@ -27,6 +27,7 @@ export type Combatant = {
   conditions: ConditionInstance[];
   guard: boolean;
   skillIds: string[];
+  baseExp?: number;
 };
 
 export type BattleState = {

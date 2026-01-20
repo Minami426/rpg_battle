@@ -10,14 +10,18 @@
   - MySQL/MariaDB（例）:
     - `mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS rpg_battle DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"`
 - DDLを適用（テーブル作成）
-  - 同梱SQL: `rpg_battle/server/sql/schema.sql`
+  - 同梱SQL: `rpg_battle/server/sql/schema.sql`（**users/runs + master_* + admin_users を含む**）
   - MySQL/MariaDB（例）:
     - `mysql -u root -p rpg_battle < rpg_battle/server/sql/schema.sql`
-  - Nodeスクリプト（例）:
+  - Nodeスクリプト（補足）:
+    - `server/scripts/apply-ddl.js` は **users/user_state/runs のみ**を作成する簡易スクリプト（マスタテーブルは作らない）です。基本は `schema.sql` の適用を推奨します。
+- マスタデータ初期投入（必須）
+  - `master_data/*.json` をDBの `master_*` へ投入します（初期画像はプレースホルダー）
+  - PowerShell例:
     - `cd rpg_battle/server`
     - （DBにパスワードがある場合）`$env:DB_PASSWORD="YOUR_PASSWORD"`
-    - `node scripts/apply-ddl.js`
-- `9.3 DDL（案）` のSQLを実行してテーブル（`users`, `user_state`, `runs`）を作成
+    - `node scripts/seed-master-data.js`
+  - 併せて **管理者ユーザー** が作成されます: `admin / admin`
 
 ### 0.3 サーバ起動（API）
 - 環境変数（`rpg_battle/server/src/db/db.ts` より）
@@ -30,6 +34,7 @@
   - `PORT`（default: `3000`）
   - `SESSION_SECRET`（default: `dev_secret`）
   - `CLIENT_ORIGINS`（default: `http://localhost:5173`、カンマ区切りで複数指定可）
+  - `.env` を使う場合: `rpg_battle/server/env.example` を `rpg_battle/server/.env` にコピーして編集
 
 PowerShell例:
 - `cd rpg_battle/server`
@@ -48,6 +53,9 @@ PowerShell例:
 ### 0.5 動作確認の最短手順
 - ブラウザでクライアントへアクセス（Viteの表示URL）
 - 新規登録 → ログイン → Start → PartySelect → Battle → Menu → ゲーム終了（保存してログアウト）
+- （任意）管理者機能の確認:
+  - `http://localhost:5173/admin/login`（Vite起動時）にアクセス → `admin / admin` でログイン
+  - 画像はサーバの `server/uploads/` に保存され、`/uploads/...` で配信されます
 
 ## 目次
 - 1. 概要
@@ -497,136 +505,105 @@ PowerShell例:
 
 ---
 
-## 8. マスタデータ（`master_data/*.json`）仕様
-### 8.1 共通仕様（MVP確定）
-- 形式: `{ "schemaVersion": 1, "data": [ ... ] }`
-- `id`: snake_case
-- 参照: `*Id` は `id` 文字列
-- `critRate` / `accuracy` / `chance`: 0.0〜1.0
-- `imageKey`: `client/src/assets/**/<imageKey>.png` に一致（拡張子除外）
-- サーバ起動時にバリデーションし、異常なら起動失敗（MVP推奨）
+## 8. マスタデータ仕様
+### 8.1 方針（変更: DB移行）
+- **マスタデータはDBに保存**する（`master_data/*.json` は初期データ投入用として残す）
+- キャラクター、スキル、アイテム、状態異常、敵のデータは `master_*` テーブルに格納
+- **画像ファイルはサーバに保存**（`server/uploads/characters/`, `server/uploads/enemies/` など）
+- `imagePath`: サーバ上の画像ファイルパス（例: `/uploads/characters/hero.png`）
+- サーバ起動時にDBからマスタデータを読み込み、メモリに保持（キャッシュ）
+- 管理者ページからマスタデータの追加・編集・削除が可能
 
-### 8.1.1 参照整合性（MVP必須）
+### 8.1.1 参照整合性（必須）
 以下は **実装時に必ず整合**させる（不足すると戦闘や画面が破綻する）。
-- `characters.json` の `initialSkillIds` / `learnableSkillIds` は `skills.json` の `id` を参照する
-- `skills.json` の `conditions[].conditionId` は `conditions.json` の `id` を参照する
-- `enemies.json` の `skillIds` は `skills.json` の `id` を参照する
-- `items.json` の `id` は、進捗（所持アイテム）で参照する
+- `master_characters` の `initial_skill_ids` / `learnable_skill_ids` は `master_skills` の `id` を参照する
+- `master_skills` の `conditions`（JSON配列）内の `conditionId` は `master_conditions` の `id` を参照する
+- `master_enemies` の `skill_ids`（JSON配列）は `master_skills` の `id` を参照する
+- `master_items` の `id` は、進捗（所持アイテム）で参照する
 
-> 注記: 本書の例に出てくる `attack_basic` / `heal_small` / `ether` / `burn` 等は、実際に各JSONに定義すること（例示IDのまま実装してOK）。
+> 注記: 本書の例に出てくる `attack_basic` / `heal_small` / `ether` / `burn` 等は、実際に各テーブルに定義すること（例示IDのまま実装してOK）。
 
-### 8.2 `characters.json`
-```json
-{
-  "schemaVersion": 1,
-  "data": [
-    {
-      "id": "hero",
-      "name": "勇者",
-      "description": "バランスがよく様々な系統のスキルが使える",
-      "imageKey": "hero",
-      "baseStats": { "maxHp": 100, "maxMp": 30, "atk": 15, "matk": 10, "def": 10, "speed": 10 },
-      "growthPerLevel": { "maxHp": 8, "maxMp": 3, "atk": 2, "matk": 2, "def": 2, "speed": 1 },
-      "initialSkillIds": ["attack_basic"],
-      "learnableSkillIds": ["fireball", "heal_small"],
-      "tags": ["balanced"]
-    }
-  ]
-}
-```
-- ステータス算出（暫定）: `base + (level - 1) * growth`
+### 8.2 `master_characters` テーブル
+- **カラム**:
+  - `id`: VARCHAR(64) PRIMARY KEY（snake_case）
+  - `name`: VARCHAR(64) NOT NULL
+  - `description`: TEXT
+  - `image_path`: VARCHAR(255) NOT NULL（サーバ上の画像パス、例: `/uploads/characters/hero.png`）
+  - `base_stats_json`: JSON NOT NULL（`{ "maxHp": 100, "maxMp": 30, "atk": 15, "matk": 10, "def": 10, "speed": 10 }`）
+  - `growth_per_level_json`: JSON NOT NULL（`{ "maxHp": 8, "maxMp": 3, "atk": 2, "matk": 2, "def": 2, "speed": 1 }`）
+  - `initial_skill_ids_json`: JSON NOT NULL（`["attack_basic"]`）
+  - `learnable_skill_ids_json`: JSON NOT NULL（`["fireball", "heal_small"]`）
+  - `tags_json`: JSON（`["balanced"]`）
+  - `created_at`: DATETIME DEFAULT CURRENT_TIMESTAMP
+  - `updated_at`: DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+- **ステータス算出（暫定）**: `base + (level - 1) * growth`
+- **画像**: `server/uploads/characters/<id>.png` に保存（管理者ページからアップロード）
 
-### 8.3 `skills.json`
-```json
-{
-  "schemaVersion": 1,
-  "data": [
-    {
-      "id": "fireball",
-      "name": "ファイアボール",
-      "description": "敵単体に魔法ダメージ",
-      "skillType": "attack",
-      "targetType": "enemy",
-      "range": "single",
-      "power": 120,
-      "powerType": "magical",
-      "element": "fire",
-      "scaling": "matk",
-      "critRate": 0.05,
-      "critMag": 1.5,
-      "cost": 5,
-      "costType": "mp",
-      "accuracy": 0.95,
-      "conditions": [
-        { "conditionId": "burn", "chance": 0.2, "durationOverride": 2 }
-      ],
-      "unlockLevel": 3,
-      "prerequisiteIds": [],
-      "isPassive": false
-    }
-  ]
-}
-```
+### 8.3 `master_skills` テーブル
+- **カラム**:
+  - `id`: VARCHAR(64) PRIMARY KEY（snake_case）
+  - `name`: VARCHAR(64) NOT NULL
+  - `description`: TEXT
+  - `skill_type`: ENUM('attack', 'heal', 'buff', 'debuff', 'special') NOT NULL
+  - `target_type`: ENUM('enemy', 'ally', 'self') NOT NULL
+  - `range`: ENUM('single', 'all') NOT NULL
+  - `power`: INT NOT NULL
+  - `power_type`: ENUM('physical', 'magical') NOT NULL
+  - `element`: VARCHAR(32)（'fire', 'ice', 'poison' 等、MVPでは未使用）
+  - `crit_rate`: DECIMAL(5,4) DEFAULT 0.0（0.0〜1.0）
+  - `crit_mag`: DECIMAL(5,2) DEFAULT 1.5
+  - `cost`: INT NOT NULL
+  - `cost_type`: ENUM('mp', 'hp') NOT NULL
+  - `accuracy`: DECIMAL(5,4) DEFAULT 1.0（0.0〜1.0）
+  - `conditions_json`: JSON（`[{ "conditionId": "burn", "chance": 0.2, "durationOverride": 2 }]`）
+  - `unlock_level`: INT DEFAULT 1
+  - `prerequisite_ids_json`: JSON（`[]`）
+  - `is_passive`: BOOLEAN DEFAULT FALSE
+  - `created_at`: DATETIME DEFAULT CURRENT_TIMESTAMP
+  - `updated_at`: DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 
-### 8.4 `items.json`
-```json
-{
-  "schemaVersion": 1,
-  "data": [
-    {
-      "id": "potion",
-      "name": "ポーション",
-      "description": "味方単体のHPを回復",
-      "type": "potion",
-      "target": "ally",
-      "battleUsable": true,
-      "maxStack": 99,
-      "effect": { "kind": "heal_hp", "power": 30 }
-    }
-  ]
-}
-```
+### 8.4 `master_items` テーブル
+- **カラム**:
+  - `id`: VARCHAR(64) PRIMARY KEY（snake_case）
+  - `name`: VARCHAR(64) NOT NULL
+  - `description`: TEXT
+  - `type`: VARCHAR(32) NOT NULL（'potion', 'ether', 'buff_item' 等）
+  - `target`: ENUM('ally', 'enemy', 'self') NOT NULL
+  - `battle_usable`: BOOLEAN DEFAULT TRUE
+  - `max_stack`: INT DEFAULT 99
+  - `effect_json`: JSON NOT NULL（`{ "kind": "heal_hp", "power": 30 }`）
+  - `created_at`: DATETIME DEFAULT CURRENT_TIMESTAMP
+  - `updated_at`: DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 
-### 8.5 `conditions.json`
-```json
-{
-  "schemaVersion": 1,
-  "data": [
-    {
-      "id": "poison",
-      "name": "毒",
-      "conditionType": "dot",
-      "stat": "hp",
-      "value": 5,
-      "valueType": "add",
-      "duration": 3
-    }
-  ]
-}
-```
+### 8.5 `master_conditions` テーブル
+- **カラム**:
+  - `id`: VARCHAR(64) PRIMARY KEY（snake_case）
+  - `name`: VARCHAR(64) NOT NULL
+  - `condition_type`: ENUM('dot', 'regen', 'stun', 'buff', 'debuff') NOT NULL
+  - `stat`: ENUM('hp', 'mp', 'atk', 'matk', 'def', 'speed') NOT NULL
+  - `value`: INT NOT NULL
+  - `value_type`: ENUM('add', 'multiply') NOT NULL
+  - `duration`: INT NOT NULL（ターン数）
+  - `created_at`: DATETIME DEFAULT CURRENT_TIMESTAMP
+  - `updated_at`: DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 
-### 8.6 `enemies.json`
-```json
-{
-  "schemaVersion": 1,
-  "data": [
-    {
-      "id": "slime_a",
-      "name": "スライム",
-      "imageKey": "slime_01",
-      "baseCost": 10,
-      "appearMinFloor": 1,
-      "appearMaxFloor": 15,
-      "isBoss": false,
-      "baseStats": { "maxHp": 50, "maxMp": 0, "atk": 8, "matk": 0, "def": 5, "speed": 6 },
-      "growthPerLevel": { "maxHp": 5, "maxMp": 0, "atk": 1, "matk": 0, "def": 1, "speed": 1 },
-      "skillIds": ["attack_basic"],
-      "aiProfile": { "type": "default" }
-    }
-  ]
-}
-```
-- 敵レベル（暫定）: `enemyLevel = max(1, floor(currentFloor / 2))`
+### 8.6 `master_enemies` テーブル
+- **カラム**:
+  - `id`: VARCHAR(64) PRIMARY KEY（snake_case）
+  - `name`: VARCHAR(64) NOT NULL
+  - `image_path`: VARCHAR(255) NOT NULL（サーバ上の画像パス、例: `/uploads/enemies/slime_01.png`）
+  - `base_cost`: INT NOT NULL
+  - `appear_min_floor`: INT DEFAULT 1
+  - `appear_max_floor`: INT（NULLの場合は101階以降も出現可能）
+  - `is_boss`: BOOLEAN DEFAULT FALSE
+  - `base_stats_json`: JSON NOT NULL（`{ "maxHp": 50, "maxMp": 0, "atk": 8, "matk": 0, "def": 5, "speed": 6 }`）
+  - `growth_per_level_json`: JSON NOT NULL（`{ "maxHp": 5, "maxMp": 0, "atk": 1, "matk": 0, "def": 1, "speed": 1 }`）
+  - `skill_ids_json`: JSON NOT NULL（`["attack_basic"]`）
+  - `ai_profile_json`: JSON（`{ "type": "default" }`）
+  - `created_at`: DATETIME DEFAULT CURRENT_TIMESTAMP
+  - `updated_at`: DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+- **敵レベル（暫定）**: `enemyLevel = max(1, floor(currentFloor / 2))`
+- **画像**: `server/uploads/enemies/<id>.png` に保存（管理者ページからアップロード）
 
 ### 8.7 初期所持アイテム（暫定）
 - ポーション: 3
@@ -639,12 +616,22 @@ PowerShell例:
 - 進捗は `user_state.state_json` に **1 JSONで保持（正規化しない）**
 
 ### 9.2 テーブル
-- `users`
-- `user_state`
-- `runs`
+- **ユーザー/進捗関連**:
+  - `users`
+  - `user_state`
+  - `runs`
+- **マスタデータ**:
+  - `master_characters`
+  - `master_skills`
+  - `master_items`
+  - `master_conditions`
+  - `master_enemies`
+- **管理者**:
+  - `admin_users`（管理者認証用）
 
 ### 9.3 DDL（案）
 ```sql
+-- ユーザー/進捗関連
 CREATE TABLE users (
   id BIGINT NOT NULL AUTO_INCREMENT,
   username VARCHAR(32) NOT NULL,
@@ -678,6 +665,101 @@ CREATE TABLE runs (
   KEY idx_runs_user_id_created_at (user_id, created_at),
   KEY idx_runs_rank_floor_damage (max_floor_reached, max_damage),
   CONSTRAINT fk_runs_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- マスタデータ
+CREATE TABLE master_characters (
+  id VARCHAR(64) NOT NULL,
+  name VARCHAR(64) NOT NULL,
+  description TEXT,
+  image_path VARCHAR(255) NOT NULL,
+  base_stats_json JSON NOT NULL,
+  growth_per_level_json JSON NOT NULL,
+  initial_skill_ids_json JSON NOT NULL,
+  learnable_skill_ids_json JSON NOT NULL,
+  tags_json JSON,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE master_skills (
+  id VARCHAR(64) NOT NULL,
+  name VARCHAR(64) NOT NULL,
+  description TEXT,
+  skill_type ENUM('attack', 'heal', 'buff', 'debuff', 'special') NOT NULL,
+  target_type ENUM('enemy', 'ally', 'self') NOT NULL,
+  range ENUM('single', 'all') NOT NULL,
+  power INT NOT NULL,
+  power_type ENUM('physical', 'magical') NOT NULL,
+  element VARCHAR(32),
+  crit_rate DECIMAL(5,4) DEFAULT 0.0,
+  crit_mag DECIMAL(5,2) DEFAULT 1.5,
+  cost INT NOT NULL,
+  cost_type ENUM('mp', 'hp') NOT NULL,
+  accuracy DECIMAL(5,4) DEFAULT 1.0,
+  conditions_json JSON,
+  unlock_level INT DEFAULT 1,
+  prerequisite_ids_json JSON,
+  is_passive BOOLEAN DEFAULT FALSE,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE master_items (
+  id VARCHAR(64) NOT NULL,
+  name VARCHAR(64) NOT NULL,
+  description TEXT,
+  type VARCHAR(32) NOT NULL,
+  target ENUM('ally', 'enemy', 'self') NOT NULL,
+  battle_usable BOOLEAN DEFAULT TRUE,
+  max_stack INT DEFAULT 99,
+  effect_json JSON NOT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE master_conditions (
+  id VARCHAR(64) NOT NULL,
+  name VARCHAR(64) NOT NULL,
+  condition_type ENUM('dot', 'regen', 'stun', 'buff', 'debuff') NOT NULL,
+  stat ENUM('hp', 'mp', 'atk', 'matk', 'def', 'speed') NOT NULL,
+  value INT NOT NULL,
+  value_type ENUM('add', 'multiply') NOT NULL,
+  duration INT NOT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE master_enemies (
+  id VARCHAR(64) NOT NULL,
+  name VARCHAR(64) NOT NULL,
+  image_path VARCHAR(255) NOT NULL,
+  base_cost INT NOT NULL,
+  appear_min_floor INT DEFAULT 1,
+  appear_max_floor INT,
+  is_boss BOOLEAN DEFAULT FALSE,
+  base_stats_json JSON NOT NULL,
+  growth_per_level_json JSON NOT NULL,
+  skill_ids_json JSON NOT NULL,
+  ai_profile_json JSON,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 管理者
+CREATE TABLE admin_users (
+  id BIGINT NOT NULL AUTO_INCREMENT,
+  username VARCHAR(32) NOT NULL,
+  password VARCHAR(255) NOT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE KEY uq_admin_users_username (username)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 ```
 
@@ -759,7 +841,24 @@ ORDER BY best_floor DESC, best_damage DESC, MAX(r.created_at) DESC;
 - `POST /api/battle/act`
 - `GET /api/battle/:battleId`
 
-### 10.5 保存呼び出しタイミング（確定）
+### 10.5 マスタデータ（公開API）
+- `GET /api/master`（全マスタデータ取得、キャッシュから返却）
+
+### 10.6 画像配信
+- `GET /uploads/characters/:filename`（キャラクター画像）
+- `GET /uploads/enemies/:filename`（敵画像）
+
+### 10.7 管理者API（管理者認証必須）
+- `POST /api/admin/login`（管理者ログイン）
+- `POST /api/admin/logout`（管理者ログアウト）
+- `GET /api/admin/characters`（キャラクター一覧）
+- `POST /api/admin/characters`（キャラクター追加）
+- `PUT /api/admin/characters/:id`（キャラクター更新）
+- `DELETE /api/admin/characters/:id`（キャラクター削除）
+- `POST /api/admin/characters/:id/image`（キャラクター画像アップロード）
+- （同様に `skills`, `items`, `conditions`, `enemies` にもCRUD API）
+
+### 10.8 保存呼び出しタイミング（確定）
 - ゲーム終了:
   - `POST /api/runs`（quit）
   - `PUT /api/state`
@@ -770,7 +869,7 @@ ORDER BY best_floor DESC, best_damage DESC, MAX(r.created_at) DESC;
   - `PUT /api/state`
   - （ログイン維持のため **logoutは呼ばない**）
 
-### 10.6 レスポンス/エラーの共通形式（MVP推奨）
+### 10.9 レスポンス/エラーの共通形式（MVP推奨）
 クライアント実装を詰まらせないため、APIのエラー形式を統一する。
 
 #### 10.6.1 成功レスポンス（例）
@@ -784,7 +883,7 @@ ORDER BY best_floor DESC, best_damage DESC, MAX(r.created_at) DESC;
 ```
 - `code` の例: `BAD_REQUEST`, `UNAUTHORIZED`, `FORBIDDEN`, `NOT_FOUND`, `CONFLICT`, `INTERNAL`
 
-### 10.7 戦闘APIの入出力（MVP推奨）
+### 10.10 戦闘APIの入出力（MVP推奨）
 サーバ権威戦闘で詰まりやすい「進捗の持ち方」を統一するため、APIで扱う最低限の形を定義する。
 
 - `POST /api/battle/start`（推奨入力）
@@ -797,7 +896,7 @@ ORDER BY best_floor DESC, best_damage DESC, MAX(r.created_at) DESC;
   - `battle`（battle state：敵/味方の現在HP、行動者、ログ）
   - `deltaState`（消費アイテムや獲得経験値など、進捗への差分。クライアントはローカル進捗へ適用）
 
-#### 10.7.1 進捗の正（MVP確定）
+#### 10.10.1 進捗の正（MVP確定）
 MVPでは以下を**確定仕様**とする。
 - **アイテム所持数の正はサーバ**とする
   - `POST /api/battle/act` で `payload.itemId` が指定された場合、サーバは `state.items[itemId]` を確認し、足りなければエラー（`BAD_REQUEST`）を返す
@@ -815,10 +914,15 @@ rpg_battle/
   client/
     src/
       assets/
-        enemies/
         ui/
       components/
       pages/
+        AdminPage.vue（管理者ページ）
+        AdminCharacterEditPage.vue（キャラクター編集）
+        AdminSkillEditPage.vue（スキル編集）
+        AdminItemEditPage.vue（アイテム編集）
+        AdminConditionEditPage.vue（状態異常編集）
+        AdminEnemyEditPage.vue（敵編集）
       router/
       store/
       services/
@@ -826,21 +930,32 @@ rpg_battle/
   server/
     src/
       api/
+        AdminController.ts（管理者API）
       auth/
+        adminAuthGuard.ts（管理者認証ミドルウェア）
       db/
+        MasterCharacterRepository.ts
+        MasterSkillRepository.ts
+        MasterItemRepository.ts
+        MasterConditionRepository.ts
+        MasterEnemyRepository.ts
+        AdminUserRepository.ts
       game/
       master/
+        MasterDataCache.ts（DBから読み込んだマスタデータのキャッシュ）
+      uploads/
+        characters/（キャラクター画像）
+        enemies/（敵画像）
       validation/
   shared/
     types/
-  master_data/
+  master_data/（初期データ投入用、DB移行後は参照のみ）
     characters.json
     skills.json
     items.json
     conditions.json
     enemies.json
-  要件定義.md
-  readme.md
+  README.md
 ```
 
 ### 11.2 クラス/モジュール構成（要点）
@@ -848,11 +963,16 @@ rpg_battle/
   - `BattleService`, `EnemyFactory`, `TurnManager`, `DamageCalculator`, `ConditionSystem`, `EnemyAI`, `ExperienceService`
   - `BattleMemoryStore`（メモリ保持）
   - `UserRepository`, `UserStateRepository`, `RunRepository`
-  - `AuthController`, `StateController`, `BattleController`, `RunController`, `RankingController`
+  - `MasterCharacterRepository`, `MasterSkillRepository`, `MasterItemRepository`, `MasterConditionRepository`, `MasterEnemyRepository`
+  - `AdminUserRepository`
+  - `MasterDataCache`（DBから読み込んだマスタデータをメモリキャッシュ）
+  - `AuthController`, `StateController`, `BattleController`, `RunController`, `RankingController`, `AdminController`
+  - `adminAuthGuard`（管理者認証ミドルウェア）
 - クライアント:
   - `ApiClient`
   - `AuthStore`, `UserStateStore`, `BattleViewStore`, `StatsStore`
   - `LoginPage`, `RegisterPage`, `PartySelectPage`, `BattlePage`, `MenuPage`, `StatsRankingPage`, `RunDetailPage`
+  - `AdminPage`, `AdminCharacterEditPage`, `AdminSkillEditPage`, `AdminItemEditPage`, `AdminConditionEditPage`, `AdminEnemyEditPage`
 
 ---
 
@@ -986,6 +1106,31 @@ rpg_battle/
   - `client/src/pages/RunDetailPage.vue`
 
 > ゴール: 戦績一覧/ランキング/詳細が表示できる。
+
+#### 12.4.9 フェーズ8: マスタデータDB移行と管理者機能
+- **server**
+  - `server/sql/schema.sql`: マスタテーブルDDL追加
+  - `server/src/db/MasterCharacterRepository.ts` 等（各マスタRepository）
+  - `server/src/master/MasterDataCache.ts`: DBからマスタデータを読み込みキャッシュ
+  - `server/src/index.ts`: 起動時にMasterDataCacheを初期化
+  - `server/src/api/MasterController.ts`: `GET /api/master`（キャッシュから返却）
+  - `server/src/db/AdminUserRepository.ts`
+  - `server/src/auth/adminAuthGuard.ts`: 管理者認証ミドルウェア
+  - `server/src/api/AdminController.ts`: 管理者CRUD API
+  - `server/src/index.ts`: 画像配信用の静的ファイル配信設定（`/uploads/*`）
+  - `server/src/api/AdminController.ts`: 画像アップロード処理（`multer` 等を使用）
+- **client**
+  - `client/src/pages/AdminPage.vue`: 管理者ログイン/マスタデータ一覧
+  - `client/src/pages/AdminCharacterEditPage.vue`: キャラクター追加/編集（画像アップロード含む）
+  - `client/src/pages/AdminSkillEditPage.vue`: スキル追加/編集
+  - `client/src/pages/AdminItemEditPage.vue`: アイテム追加/編集
+  - `client/src/pages/AdminConditionEditPage.vue`: 状態異常追加/編集
+  - `client/src/pages/AdminEnemyEditPage.vue`: 敵追加/編集（画像アップロード含む）
+  - `client/src/services/apiClient.ts`: 管理者API呼び出しメソッド追加
+- **初期データ投入**
+  - `server/scripts/seed-master-data.js`: `master_data/*.json` からDBへ初期データ投入スクリプト
+
+> ゴール: 管理者ページからマスタデータの追加・編集・削除ができ、画像もアップロードできる。ゲーム側はDBからマスタデータを取得して動作する。
 
 ---
 

@@ -7,6 +7,8 @@ import runRouter from "./RunController";
 import rankingRouter from "./RankingController";
 import battleRouter from "./BattleController";
 import flowRouter from "./FlowController";
+import { adminAuthRouter } from "./AdminAuthController";
+import { adminMasterRouter } from "./AdminMasterController";
 
 export const router = Router();
 
@@ -18,4 +20,8 @@ router.use("/runs", runRouter);
 router.use("/ranking", rankingRouter);
 router.use("/battle", battleRouter);
 router.use("/flow", flowRouter);
+
+// 管理者API
+router.use("/admin", adminAuthRouter);
+router.use("/admin", adminMasterRouter);
 

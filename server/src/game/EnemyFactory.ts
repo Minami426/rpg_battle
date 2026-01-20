@@ -27,7 +27,8 @@ export function generateEnemies(floor: number, masters: Masters): Combatant[] {
   if (pickBoss) {
     const bosses = candidates.filter((c) => c.isBoss);
     if (bosses.length) {
-      const boss = bosses[Math.floor(Math.random() * bosses.length)];
+      const pick = pickWeighted(bosses);
+      const boss = pick?.enemy ?? bosses[Math.floor(Math.random() * bosses.length)];
       const level = enemyLevel(floor);
       const cost = effectiveCost(boss.baseCost, level);
       if (cost <= costLimit) {
@@ -40,15 +41,15 @@ export function generateEnemies(floor: number, masters: Masters): Combatant[] {
   // fill normals
   const normals = candidates.filter((c) => !c.isBoss);
   while (enemies.length < desiredCount && normals.length > 0) {
-    const idx = Math.floor(Math.random() * normals.length);
-    const enemy = normals[idx];
+    const pick = pickWeighted(normals) ?? { enemy: normals[0], index: 0 };
+    const enemy = pick.enemy;
     const level = enemyLevel(floor);
     const cost = effectiveCost(enemy.baseCost, level);
     if (totalCost + cost <= costLimit) {
       enemies.push(toCombatant(enemy, level));
       totalCost += cost;
     } else {
-      normals.splice(idx, 1);
+      normals.splice(pick.index, 1);
     }
   }
 
@@ -62,7 +63,22 @@ export function generateEnemies(floor: number, masters: Masters): Combatant[] {
 }
 
 function enemyLevel(floor: number): number {
-  return Math.max(1, Math.floor(floor / 2));
+  const f = Math.max(1, floor);
+  let base = 1;
+  let variance = 0.15;
+  if (f <= 100) {
+    // 50階で42.5、100階で100になる二次曲線
+    base = 0.003 * Math.pow(f, 2) + 0.7 * f;
+    variance = 0.15;
+  } else if (f <= 200) {
+    base = 100 + (f - 100) * 1.75;
+    variance = 0.1;
+  } else {
+    base = 275 + (f - 200) * 2.0;
+    variance = 0.05;
+  }
+  const jitter = 1 + (Math.random() * 2 - 1) * variance;
+  return Math.max(1, Math.floor(base * jitter));
 }
 
 function effectiveCost(baseCost: number, level: number): number {
@@ -82,15 +98,41 @@ function toCombatant(e: any, level: number): Combatant {
     conditions: [],
     guard: false,
     skillIds: e.skillIds ?? ["attack_basic"],
+    baseExp: e.baseExp ?? 0,
   };
+}
+
+function pickWeighted(list: any[]): { enemy: any; index: number } | null {
+  if (list.length === 0) return null;
+  let total = 0;
+  const weights = list.map((e) => {
+    const baseExp = typeof e.baseExp === "number" ? e.baseExp : 0;
+    // 指数を1.3に上げ、レア敵の出現率をさらに下げる
+    const w = Math.floor(1_000_000 / Math.pow(baseExp + 1000, 1.3));
+    const safe = Math.max(1, w);
+    total += safe;
+    return safe;
+  });
+  let r = Math.random() * total;
+  for (let i = 0; i < list.length; i++) {
+    r -= weights[i];
+    if (r <= 0) {
+      return { enemy: list[i], index: i };
+    }
+  }
+  return { enemy: list[list.length - 1], index: list.length - 1 };
 }
 
 function scaleStats(base: Stats, growth: any, level: number): Stats {
   const lv = Math.max(1, level);
   const add = (key: keyof Stats) => base[key] + (lv - 1) * (growth?.[key] ?? 0);
+  
+  // HP/MPのインフレ倍率をプレイヤーと同等にする（Lv100で約821倍）
+  const hpLvl = 1 + lv * 0.2 + Math.pow(lv, 2) * 0.08;
+
   return {
-    maxHp: add("maxHp"),
-    maxMp: add("maxMp"),
+    maxHp: Math.floor(add("maxHp") * hpLvl),
+    maxMp: Math.floor(add("maxMp") * hpLvl),
     atk: add("atk"),
     matk: add("matk"),
     def: add("def"),

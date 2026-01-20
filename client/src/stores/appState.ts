@@ -8,6 +8,7 @@ export type UserState = {
   characters: Record<string, any>;
   skills: Record<string, any>;
   items: Record<string, number>;
+  expStock?: number;
 };
 
 export type AppState = {
@@ -15,6 +16,7 @@ export type AppState = {
   state: UserState | null;
   battle: any | null;
   maxDamageCurrentRun: number;
+  systemLog: string[];
 };
 
 export const appState = reactive<AppState>({
@@ -22,5 +24,6 @@ export const appState = reactive<AppState>({
   state: null,
   battle: null,
   maxDamageCurrentRun: 0,
+  systemLog: [],
 });
 

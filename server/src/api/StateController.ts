@@ -2,7 +2,7 @@ import { Router } from "express";
 import { authGuard } from "../middleware/authGuard";
 import { UserStateRepository } from "../db/UserStateRepository";
 import { createInitialState } from "../utils/initialState";
-import { applyBattleDelta } from "../utils/stateHelpers";
+import { applyBattleDelta, allocateExpToStateObject } from "../utils/stateHelpers";
 import { scalePlayerStats } from "../game/playerStats";
 
 const router = Router();
@@ -79,6 +79,22 @@ router.post("/apply-battle", authGuard, async (req, res) => {
   } catch (e) {
     console.error(e);
     res.status(500).json({ ok: false, error: { code: "INTERNAL", message: "failed to apply battle delta" } });
+  }
+});
+
+// POST /api/state/allocate-exp (経験値ストックから割り振り)
+router.post("/allocate-exp", authGuard, async (req, res) => {
+  try {
+    const masters = (req as any).masters;
+    const allocations = req.body?.allocations;
+    const baseState = req.body?.state;
+    if (!Array.isArray(allocations) || allocations.length === 0) {
+      return res.status(400).json({ ok: false, error: { code: "BAD_REQUEST", message: "allocations missing" } });
+    }
+    const { state, result } = allocateExpToStateObject({ masters, state: baseState, allocations });
+    res.json({ ok: true, data: { state, result } });
+  } catch (e: any) {
+    res.status(400).json({ ok: false, error: { code: "BAD_REQUEST", message: e?.message || "failed to allocate exp" } });
   }
 });
 

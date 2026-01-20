@@ -54,4 +54,6 @@ Desktop.ini
 *.swo
 *.bak
 
-
+# --- uploaded images (not in Git) ---
+server/uploads/**
+!server/uploads/.gitkeep

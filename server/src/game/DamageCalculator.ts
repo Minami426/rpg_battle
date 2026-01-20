@@ -8,8 +8,10 @@ const randFloat = (min: number, max: number) => Math.random() * (max - min) + mi
 export function calcAttackDamage(attacker: Combatant, defender: Combatant) {
   const atkStats = getEffectiveStats(attacker);
   const defStats = getEffectiveStats(defender);
-  const base = atkStats.atk - Math.floor(defStats.def * 0.5);
-  const lvl = 1 + attacker.level * 0.02;
+  // 防御力による詰みを防ぐ減衰式: ATK^2 / (ATK + DEF*0.5)
+  const base = (Math.pow(atkStats.atk, 2)) / (atkStats.atk + defStats.def * 0.5);
+  // レベル倍率を調整（Lv100で約511倍）
+  const lvl = 1 + attacker.level * 0.1 + Math.pow(attacker.level, 2) * 0.05;
   const variance = randFloat(0.9, 1.1);
   let damage = Math.floor(Math.max(1, base) * lvl * variance);
   return applyDefense(damage, defender.guard);
@@ -19,8 +21,11 @@ export function calcSkillDamage(attacker: Combatant, defender: Combatant, skill:
   const atkStats = getEffectiveStats(attacker);
   const defStats = getEffectiveStats(defender);
   const stat = skill.powerType === "magical" ? atkStats.matk : atkStats.atk;
-  const base = stat * (skill.power / 100) - Math.floor(defStats.def * 0.5);
-  const lvl = 1 + attacker.level * 0.02;
+  // 基礎威力を計算
+  const powerMult = skill.power / 100;
+  const base = (Math.pow(stat * powerMult, 2)) / (stat * powerMult + defStats.def * 0.5);
+  // レベル倍率
+  const lvl = 1 + attacker.level * 0.1 + Math.pow(attacker.level, 2) * 0.05;
   const variance = randFloat(0.9, 1.1);
   let damage = Math.floor(Math.max(1, base) * lvl * variance);
   // accuracy
@@ -35,7 +40,9 @@ export function calcSkillDamage(attacker: Combatant, defender: Combatant, skill:
 }
 
 export function calcHealing(attacker: Combatant, power: number) {
-  const val = power * (1 + attacker.level * 0.02) * randFloat(0.95, 1.05);
+  // 回復も同様にスケール
+  const lvl = 1 + attacker.level * 0.1 + Math.pow(attacker.level, 2) * 0.05;
+  const val = power * lvl * randFloat(0.95, 1.05);
   return Math.floor(val);
 }
 
