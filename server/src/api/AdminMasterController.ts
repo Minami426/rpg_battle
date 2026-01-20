@@ -2,7 +2,7 @@ import { Router, Request, Response } from "express";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
-import { adminAuthGuard } from "../auth/adminAuthGuard";
+import { adminAuthGuard } from "../middleware/authGuard";
 import { getMasterDataCache } from "../master/MasterDataCache";
 
 const router = Router();

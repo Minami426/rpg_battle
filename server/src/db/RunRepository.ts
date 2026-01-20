@@ -1,5 +1,5 @@
 import { Pool } from "mysql2/promise";
-import { RunRow } from "../types/db";
+import { RunRow } from "../types";
 
 export class RunRepository {
   constructor(private pool: Pool) {}

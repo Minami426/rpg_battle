@@ -1,6 +1,6 @@
 import { Router } from "express";
-import masterRouter from "./routes/master";
-import healthRouter from "./routes/health";
+import { getMasterDataCache } from "../master/MasterDataCache";
+import { Masters } from "../types";
 import authRouter from "./AuthController";
 import stateRouter from "./StateController";
 import runRouter from "./RunController";
@@ -12,8 +12,24 @@ import { adminMasterRouter } from "./AdminMasterController";
 
 export const router = Router();
 
-router.use("/health", healthRouter);
-router.use("/master", masterRouter);
+// Health check
+router.get("/health", (_req, res) => {
+  res.json({ ok: true, data: { status: "healthy" } });
+});
+
+// Master data
+router.get("/master", (req, res) => {
+  try {
+    const cache = getMasterDataCache();
+    const masters = cache.getDataAsLegacyFormat();
+    res.json({ ok: true, data: masters });
+  } catch {
+    const masters = (req as any).masters as Masters;
+    res.json({ ok: true, data: masters });
+  }
+});
+
+// API routes
 router.use("/auth", authRouter);
 router.use("/state", stateRouter);
 router.use("/runs", runRouter);
@@ -21,7 +37,6 @@ router.use("/ranking", rankingRouter);
 router.use("/battle", battleRouter);
 router.use("/flow", flowRouter);
 
-// 管理者API
+// Admin API
 router.use("/admin", adminAuthRouter);
 router.use("/admin", adminMasterRouter);
-

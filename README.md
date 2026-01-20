@@ -1,54 +1,138 @@
 # RPG Battle（仮称）要件定義書
 
 ## 0. 実行方法（ローカル実行 / MVP）
+
+### ⚡ クイックスタート（初回セットアップ）
+
+#### 必要な環境
+- **Node.js**: v18以上（`node --version` で確認）
+- **npm**: v9以上（`npm --version` で確認）
+- **MySQL または MariaDB**: v8.0以上（ローカルで起動していること）
+
+#### セットアップ手順（全OS共通）
+
+**1. データベースの準備**
+```bash
+# データベース作成
+mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS rpg_battle DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+
+# スキーマ適用（プロジェクトルートから実行）
+mysql -u root -p rpg_battle < server/sql/schema.sql
+```
+
+**2. 環境変数の設定**
+```bash
+# server/env.example を server/.env にコピー
+cd server
+cp env.example .env
+
+# .env を編集してDBパスワードを設定（必要に応じて）
+# DB_PASSWORD=YOUR_PASSWORD
+```
+
+**3. マスタデータの投入**
+```bash
+# serverディレクトリで実行
+cd server
+npm install
+node scripts/seed-master-data.js
+```
+※ 管理者ユーザー `admin / admin` が自動的に作成されます
+
+**4. サーバーの起動**
+```bash
+# serverディレクトリで実行
+cd server
+npm run dev
+```
+→ `http://localhost:3000` でAPIサーバーが起動します
+
+**5. クライアントの起動（別ターミナル）**
+```bash
+# clientディレクトリで実行
+cd client
+npm install
+npm run dev
+```
+→ ブラウザで表示されるURL（例: `http://localhost:5173`）にアクセス
+
+**6. 動作確認**
+- ブラウザで新規登録 → ログイン → ゲーム開始
+- 管理者画面: `http://localhost:5173/admin/login`（`admin / admin`）
+
+---
+
 ### 0.1 前提
 - **Node.js + npm** が利用できること
 - **MySQL または MariaDB** がローカルで起動していること
 
-### 0.2 DB準備
-- DBを作成（例: `rpg_battle`）
-  - MySQL/MariaDB（例）:
-    - `mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS rpg_battle DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"`
-- DDLを適用（テーブル作成）
-  - 同梱SQL: `rpg_battle/server/sql/schema.sql`（**users/runs + master_* + admin_users を含む**）
-  - MySQL/MariaDB（例）:
-    - `mysql -u root -p rpg_battle < rpg_battle/server/sql/schema.sql`
-  - Nodeスクリプト（補足）:
-    - `server/scripts/apply-ddl.js` は **users/user_state/runs のみ**を作成する簡易スクリプト（マスタテーブルは作らない）です。基本は `schema.sql` の適用を推奨します。
-- マスタデータ初期投入（必須）
-  - `master_data/*.json` をDBの `master_*` へ投入します（初期画像はプレースホルダー）
-  - PowerShell例:
-    - `cd rpg_battle/server`
-    - （DBにパスワードがある場合）`$env:DB_PASSWORD="YOUR_PASSWORD"`
-    - `node scripts/seed-master-data.js`
-  - 併せて **管理者ユーザー** が作成されます: `admin / admin`
+### 0.2 DB準備（詳細）
 
-### 0.3 サーバ起動（API）
-- 環境変数（`rpg_battle/server/src/db/db.ts` より）
-  - `DB_HOST`（default: `127.0.0.1`）
-  - `DB_PORT`（default: `3306`）
-  - `DB_USER`（default: `root`）
-  - `DB_PASSWORD`（default: 空）
-  - `DB_NAME`（default: `rpg_battle`）
-- その他（`rpg_battle/server/src/index.ts` より）
-  - `PORT`（default: `3000`）
-  - `SESSION_SECRET`（default: `dev_secret`）
-  - `CLIENT_ORIGINS`（default: `http://localhost:5173`、カンマ区切りで複数指定可）
-  - `.env` を使う場合: `rpg_battle/server/env.example` を `rpg_battle/server/.env` にコピーして編集
+**DB作成**
+```bash
+mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS rpg_battle DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+```
 
-PowerShell例:
-- `cd rpg_battle/server`
-- `npm install`
-- （DBにパスワードがある場合）`$env:DB_PASSWORD="YOUR_PASSWORD"`
-- `npm run dev`
+**スキーマ適用**
+```bash
+# プロジェクトルートから実行
+mysql -u root -p rpg_battle < server/sql/schema.sql
+```
 
-### 0.4 クライアント起動（画面）
-- 開発時は **Viteのproxy** により `/api/*` を `http://localhost:3000` へ転送する（`rpg_battle/client/vite.config.ts`）。
+**マスタデータ初期投入**
+```bash
+cd server
+npm install  # 初回のみ
 
-PowerShell例:
-- `cd rpg_battle/client`
-- `npm install`
-- `npm run dev`
+# 環境変数でパスワードを指定する場合（Windows PowerShell）
+$env:DB_PASSWORD="YOUR_PASSWORD"
+node scripts/seed-master-data.js
+
+# 環境変数でパスワードを指定する場合（Mac/Linux）
+DB_PASSWORD="YOUR_PASSWORD" node scripts/seed-master-data.js
+
+# .envファイルを使用する場合（推奨）
+# server/.env に DB_PASSWORD を設定してから
+node scripts/seed-master-data.js
+```
+
+※ 管理者ユーザー `admin / admin` が自動的に作成されます
+
+### 0.3 サーバ起動（API）（詳細）
+
+**環境変数の設定**
+- `server/env.example` を `server/.env` にコピーして編集
+- 最低限 `DB_PASSWORD` を設定（DBにパスワードがある場合）
+
+**起動コマンド**
+```bash
+cd server
+npm install  # 初回のみ
+npm run dev
+```
+
+**環境変数のデフォルト値**
+- `DB_HOST`: `127.0.0.1`
+- `DB_PORT`: `3306`
+- `DB_USER`: `root`
+- `DB_PASSWORD`: 空（`.env`で設定推奨）
+- `DB_NAME`: `rpg_battle`
+- `PORT`: `3000`
+- `SESSION_SECRET`: `dev_secret`
+- `CLIENT_ORIGINS`: `http://localhost:5173`
+
+### 0.4 クライアント起動（画面）（詳細）
+
+**起動コマンド**
+```bash
+cd client
+npm install  # 初回のみ
+npm run dev
+```
+
+**動作確認**
+- Viteが起動すると、コンソールに表示されるURL（例: `http://localhost:5173`）にアクセス
+- `/api/*` へのリクエストは自動的に `http://localhost:3000` にプロキシされます
 
 ### 0.5 動作確認の最短手順
 - ブラウザでクライアントへアクセス（Viteの表示URL）
@@ -56,6 +140,39 @@ PowerShell例:
 - （任意）管理者機能の確認:
   - `http://localhost:5173/admin/login`（Vite起動時）にアクセス → `admin / admin` でログイン
   - 画像はサーバの `server/uploads/` に保存され、`/uploads/...` で配信されます
+
+### 0.6 トラブルシューティング
+
+#### よくあるエラーと対処法
+
+**エラー: `ECONNREFUSED` または `Can't connect to MySQL server`**
+- MySQL/MariaDBが起動していない可能性があります
+- 確認: `mysql -u root -p` で接続できるか確認
+- 対処: MySQL/MariaDBを起動してください
+
+**エラー: `Access denied for user 'root'@'localhost'`**
+- DBパスワードが間違っている可能性があります
+- 対処: `server/.env` の `DB_PASSWORD` を正しい値に設定
+
+**エラー: `Unknown database 'rpg_battle'`**
+- データベースが作成されていません
+- 対処: 「0.2 DB準備」の手順を実行してください
+
+**エラー: `Table 'master_characters' doesn't exist`**
+- スキーマが適用されていません
+- 対処: `mysql -u root -p rpg_battle < server/sql/schema.sql` を実行
+
+**エラー: `Cannot find module` または `npm ERR!`**
+- 依存関係がインストールされていません
+- 対処: `cd server && npm install` および `cd client && npm install` を実行
+
+**画像が表示されない**
+- `server/uploads/` ディレクトリが存在しない可能性があります
+- 対処: サーバーを起動すると自動的に作成されます（または手動で作成）
+
+**ポート3000や5173が既に使用されている**
+- 他のアプリケーションがポートを使用しています
+- 対処: 使用中のアプリを終了するか、`.env`で`PORT`を変更
 
 ## 目次
 - 1. 概要

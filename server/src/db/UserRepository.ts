@@ -1,5 +1,5 @@
 import { Pool } from "mysql2/promise";
-import { UserRow } from "../types/db";
+import { UserRow } from "../types";
 
 export class UserRepository {
   constructor(private pool: Pool) {}
