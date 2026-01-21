@@ -85,7 +85,7 @@ export function resolveAction(
           const dmg = calcSkillDamage(actor, t, skill);
           t.currentHp = Math.max(0, t.currentHp - dmg);
           state.log.push(`${actor.name} の ${skill.name}! ${t.name} に ${dmg} のダメージ`);
-          applyConditionsFromSkill(skill, t, state);
+          applyConditionsFromSkill(skill, t, state, masters);
           if (!actor.isEnemy && dmg > state.maxDamageByParty) state.maxDamageByParty = dmg;
         }
       } else if (skill.skillType === "heal") {
@@ -111,7 +111,7 @@ export function resolveAction(
         }
       } else if (skill.skillType === "buff" || skill.skillType === "debuff") {
         for (const t of typedTargets) {
-          applyConditionsFromSkill(skill, t, state);
+          applyConditionsFromSkill(skill, t, state, masters);
           state.log.push(`${actor.name} は ${skill.name} を使った`);
         }
       }
@@ -130,7 +130,7 @@ export function resolveAction(
       }
       const stock = state.items[item.id] ?? 0;
       if (stock <= 0) {
-        state.log.push(`${item.name} はもうない！`);
+        state.log.push(`${actor.name} は ${item.name} はもうない！`);
         break;
       }
       state.items[item.id] = stock - 1;
@@ -157,25 +157,31 @@ export function resolveAction(
     }
     case "defend": {
       actor.guard = true;
-      state.log.push(`${actor.name} は ぼうぎょ した`);
+      state.log.push(`${actor.name} は ぼうぎょした`);
       break;
     }
   }
 }
 
-function applyConditionsFromSkill(skill: any, target: Combatant, state: BattleState) {
+export function applyConditionsFromSkill(skill: any, target: Combatant, state: BattleState, masters?: Masters) {
   if (!Array.isArray(skill.conditions)) return;
+  const conditionMaster = masters?.conditions.data ?? [];
   for (const cond of skill.conditions) {
     if (Math.random() > (cond.chance ?? 1)) continue;
+    
+    // マスタデータから状態異常の詳細を取得
+    const condMaster = conditionMaster.find((c: any) => c.id === cond.conditionId);
+    if (!condMaster) continue;
+    
     target.conditions.push({
       id: cond.conditionId,
-      kind: inferKind(cond.conditionId, cond),
-      stat: cond.stat,
-      value: cond.value ?? cond.valueOverride,
-      valueType: cond.valueType,
-      duration: cond.durationOverride ?? cond.duration ?? 3,
+      kind: condMaster.conditionType || inferKind(cond.conditionId, condMaster),
+      stat: condMaster.stat,
+      value: condMaster.value,
+      valueType: condMaster.valueType,
+      duration: condMaster.duration,
     });
-    state.log.push(`${target.name} に ${cond.conditionId} が付与された`);
+    state.log.push(`${target.name} に ${condMaster.name || cond.conditionId} が付与された`);
   }
 }
 
@@ -185,4 +191,3 @@ function inferKind(id: string, cond: any): "dot" | "buff" | "debuff" | "stun" {
   if (id.includes("stun")) return "stun";
   return "buff";
 }
-

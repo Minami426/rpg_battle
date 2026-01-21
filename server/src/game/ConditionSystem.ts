@@ -8,6 +8,19 @@ export function startOfTurn(combatant: Combatant, log: string[]) {
     combatant.currentHp = Math.max(0, combatant.currentHp - val);
     log.push(`${combatant.name} はダメージを受けた (-${val})`);
   }
+  // Apply regeneration (HP recovery)
+  const regenEffects = combatant.conditions.filter(
+    (c) => c.kind === "buff" && c.stat === "hp" && (c.value ?? 0) < 0
+  );
+  for (const c of regenEffects) {
+    const val = Math.abs(c.value ?? 0);
+    const oldHp = combatant.currentHp;
+    combatant.currentHp = Math.min(combatant.base.maxHp, combatant.currentHp + val);
+    const healed = combatant.currentHp - oldHp;
+    if (healed > 0) {
+      log.push(`${combatant.name} は回復した (+${healed})`);
+    }
+  }
   // Stun check
   const stunned = combatant.conditions.some((c) => c.kind === "stun");
   return { stunned };
@@ -21,4 +34,3 @@ export function endOfTurn(combatant: Combatant) {
   // guard resets at end of own turn
   combatant.guard = false;
 }
-

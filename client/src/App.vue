@@ -9,7 +9,8 @@
 
 <style scoped>
 .app {
-  min-height: 100vh;
+  /* min-height: 100vh; */
+  width: 100%;
   background: #111;
   color: #eee;
   font-family: 'Inter', sans-serif;

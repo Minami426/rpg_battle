@@ -516,12 +516,12 @@ onUnmounted(() => window.removeEventListener("keydown", onKey));
 <style scoped>
 .game-screen { width: 960px; margin: 0 auto; background: #222; padding: 12px; border: 1px solid #444; height: 840px; overflow: hidden; display: flex; flex-direction: column; }
 .top-bar { display: flex; justify-content: space-between; padding: 8px 12px; border: 1px solid #333; background: #111; margin-bottom: 12px; }
-.main-area { display: grid; grid-template-columns: 1.2fr 1fr; gap: 12px; min-height: 360px; flex: 1; overflow: hidden; }
+.main-area { display: grid; grid-template-columns: 1.2fr 1fr; gap: 12px; min-height: 360px; max-height: 476px; flex: 1; overflow: hidden; }
 .left-panel { border: 1px solid #333; background: #111; padding: 12px; display: flex; flex-direction: column; gap: 8px; overflow: visible; }
 .right-panel { border: 1px solid #333; background: #111; padding: 12px; overflow: visible; }
 .menu-list { display: flex; flex-direction: column; gap: 8px; }
 .window { display: flex; flex-direction: column; gap: 8px; padding: 8px; border: 1px solid #333; background: #0c0c0c; }
-.level-window { display: grid; gap: 12px; border: 1px solid #333; background: #0c0c0c; padding: 8px; }
+.level-window { display: grid; gap: 12px; border: 1px solid #333; background: #0c0c0c; padding: 8px; max-height: 100%;}
 .level-list { display: flex; flex-direction: column; gap: 6px; }
 .level-items { display: flex; flex-direction: column; gap: 6px; max-height: 180px; overflow-y: auto; overflow-x: visible; }
 .cmd { text-align: left; padding: 8px 12px; }
