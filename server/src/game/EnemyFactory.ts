@@ -59,6 +59,21 @@ export function generateEnemies(floor: number, masters: Masters): Combatant[] {
     const level = enemyLevel(floor);
     enemies.push(toCombatant(enemy, level));
   }
+
+  // disambiguate names
+  const nameCounts: Record<string, number> = {};
+  for (const e of enemies) {
+    nameCounts[e.name] = (nameCounts[e.name] || 0) + 1;
+  }
+  const currentCounts: Record<string, number> = {};
+  for (const e of enemies) {
+    if (nameCounts[e.name] > 1) {
+      const c = (currentCounts[e.name] || 0) + 1;
+      currentCounts[e.name] = c;
+      e.name = `${e.name}${String.fromCharCode(64 + c)}`;
+    }
+  }
+
   return enemies;
 }
 

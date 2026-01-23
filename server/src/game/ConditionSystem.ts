@@ -5,6 +5,7 @@ export function startOfTurn(combatant: Combatant, log: string[]) {
   const dotEffects = combatant.conditions.filter((c) => c.kind === "dot");
   for (const c of dotEffects) {
     const val = c.value ?? 0;
+    // レベル倍率は付与時(actions.ts)に計算済みなので、ここではそのまま適用
     combatant.currentHp = Math.max(0, combatant.currentHp - val);
     log.push(`${combatant.name} はダメージを受けた (-${val})`);
   }

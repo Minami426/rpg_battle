@@ -10,10 +10,28 @@
       "appearMinFloor": 1,
       "appearMaxFloor": 15,
       "isBoss": false,
-      "baseStats": { "maxHp": 50, "maxMp": 0, "atk": 8, "matk": 0, "def": 5, "speed": 6 },
-      "growthPerLevel": { "maxHp": 100, "maxMp": 0, "atk": 8, "matk": 0, "def": 8, "speed": 1 },
-      "skillIds": ["attack_basic"],
-      "aiProfile": { "type": "default" }
+      "baseStats": {
+        "maxHp": 50,
+        "maxMp": 0,
+        "atk": 8,
+        "matk": 0,
+        "def": 5,
+        "speed": 6
+      },
+      "growthPerLevel": {
+        "maxHp": 100,
+        "maxMp": 0,
+        "atk": 8,
+        "matk": 0,
+        "def": 8,
+        "speed": 1
+      },
+      "skillIds": [
+        "attack_basic"
+      ],
+      "aiProfile": {
+        "type": "default"
+      }
     },
     {
       "id": "bubble_slime",
@@ -24,10 +42,28 @@
       "appearMinFloor": 3,
       "appearMaxFloor": 20,
       "isBoss": false,
-      "baseStats": { "maxHp": 60, "maxMp": 0, "atk": 10, "matk": 0, "def": 6, "speed": 8 },
-      "growthPerLevel": { "maxHp": 110, "maxMp": 0, "atk": 9, "matk": 0, "def": 8, "speed": 1 },
-      "skillIds": ["poison_touch"],
-      "aiProfile": { "type": "default" }
+      "baseStats": {
+        "maxHp": 60,
+        "maxMp": 0,
+        "atk": 10,
+        "matk": 0,
+        "def": 6,
+        "speed": 8
+      },
+      "growthPerLevel": {
+        "maxHp": 110,
+        "maxMp": 0,
+        "atk": 9,
+        "matk": 0,
+        "def": 8,
+        "speed": 1
+      },
+      "skillIds": [
+        "poison_touch"
+      ],
+      "aiProfile": {
+        "type": "default"
+      }
     },
     {
       "id": "metal_slime",
@@ -38,10 +74,28 @@
       "appearMinFloor": 10,
       "appearMaxFloor": 100,
       "isBoss": false,
-      "baseStats": { "maxHp": 10, "maxMp": 100, "atk": 5, "matk": 5, "def": 100, "speed": 50 },
-      "growthPerLevel": { "maxHp": 1, "maxMp": 10, "atk": 1, "matk": 1, "def": 5, "speed": 5 },
-      "skillIds": ["attack_basic"],
-      "aiProfile": { "type": "default" }
+      "baseStats": {
+        "maxHp": 10,
+        "maxMp": 100,
+        "atk": 5,
+        "matk": 5,
+        "def": 100,
+        "speed": 50
+      },
+      "growthPerLevel": {
+        "maxHp": 1,
+        "maxMp": 10,
+        "atk": 1,
+        "matk": 1,
+        "def": 5,
+        "speed": 5
+      },
+      "skillIds": [
+        "attack_basic"
+      ],
+      "aiProfile": {
+        "type": "default"
+      }
     },
     {
       "id": "goblin",
@@ -52,10 +106,28 @@
       "appearMinFloor": 5,
       "appearMaxFloor": 30,
       "isBoss": false,
-      "baseStats": { "maxHp": 70, "maxMp": 0, "atk": 12, "matk": 0, "def": 8, "speed": 10 },
-      "growthPerLevel": { "maxHp": 120, "maxMp": 0, "atk": 10, "matk": 0, "def": 9, "speed": 1 },
-      "skillIds": ["attack_basic"],
-      "aiProfile": { "type": "default" }
+      "baseStats": {
+        "maxHp": 70,
+        "maxMp": 0,
+        "atk": 12,
+        "matk": 0,
+        "def": 8,
+        "speed": 10
+      },
+      "growthPerLevel": {
+        "maxHp": 120,
+        "maxMp": 0,
+        "atk": 10,
+        "matk": 0,
+        "def": 9,
+        "speed": 1
+      },
+      "skillIds": [
+        "attack_basic"
+      ],
+      "aiProfile": {
+        "type": "default"
+      }
     },
     {
       "id": "goblin_archer",
@@ -66,10 +138,28 @@
       "appearMinFloor": 8,
       "appearMaxFloor": 35,
       "isBoss": false,
-      "baseStats": { "maxHp": 65, "maxMp": 0, "atk": 14, "matk": 0, "def": 7, "speed": 14 },
-      "growthPerLevel": { "maxHp": 115, "maxMp": 0, "atk": 11, "matk": 0, "def": 8, "speed": 2 },
-      "skillIds": ["attack_basic"],
-      "aiProfile": { "type": "default" }
+      "baseStats": {
+        "maxHp": 65,
+        "maxMp": 0,
+        "atk": 14,
+        "matk": 0,
+        "def": 7,
+        "speed": 14
+      },
+      "growthPerLevel": {
+        "maxHp": 115,
+        "maxMp": 0,
+        "atk": 11,
+        "matk": 0,
+        "def": 8,
+        "speed": 2
+      },
+      "skillIds": [
+        "attack_basic"
+      ],
+      "aiProfile": {
+        "type": "default"
+      }
     },
     {
       "id": "goblin_shaman",
@@ -80,10 +170,29 @@
       "appearMinFloor": 10,
       "appearMaxFloor": 40,
       "isBoss": false,
-      "baseStats": { "maxHp": 60, "maxMp": 50, "atk": 8, "matk": 16, "def": 6, "speed": 11 },
-      "growthPerLevel": { "maxHp": 110, "maxMp": 5, "atk": 8, "matk": 12, "def": 8, "speed": 1 },
-      "skillIds": ["fireball", "heal_small"],
-      "aiProfile": { "type": "default" }
+      "baseStats": {
+        "maxHp": 60,
+        "maxMp": 50,
+        "atk": 8,
+        "matk": 16,
+        "def": 6,
+        "speed": 11
+      },
+      "growthPerLevel": {
+        "maxHp": 110,
+        "maxMp": 5,
+        "atk": 8,
+        "matk": 12,
+        "def": 8,
+        "speed": 1
+      },
+      "skillIds": [
+        "fireball",
+        "slow"
+      ],
+      "aiProfile": {
+        "type": "default"
+      }
     },
     {
       "id": "orc",
@@ -94,10 +203,29 @@
       "appearMinFloor": 15,
       "appearMaxFloor": 50,
       "isBoss": false,
-      "baseStats": { "maxHp": 110, "maxMp": 0, "atk": 18, "matk": 0, "def": 12, "speed": 9 },
-      "growthPerLevel": { "maxHp": 150, "maxMp": 0, "atk": 12, "matk": 0, "def": 10, "speed": 1 },
-      "skillIds": ["power_strike", "guard"],
-      "aiProfile": { "type": "default" }
+      "baseStats": {
+        "maxHp": 110,
+        "maxMp": 0,
+        "atk": 18,
+        "matk": 0,
+        "def": 12,
+        "speed": 9
+      },
+      "growthPerLevel": {
+        "maxHp": 150,
+        "maxMp": 0,
+        "atk": 12,
+        "matk": 0,
+        "def": 10,
+        "speed": 1
+      },
+      "skillIds": [
+        "power_strike",
+        "guard"
+      ],
+      "aiProfile": {
+        "type": "default"
+      }
     },
     {
       "id": "skeleton",
@@ -108,10 +236,28 @@
       "appearMinFloor": 10,
       "appearMaxFloor": 45,
       "isBoss": false,
-      "baseStats": { "maxHp": 80, "maxMp": 0, "atk": 15, "matk": 0, "def": 10, "speed": 12 },
-      "growthPerLevel": { "maxHp": 130, "maxMp": 0, "atk": 11, "matk": 0, "def": 9, "speed": 1 },
-      "skillIds": ["slash"],
-      "aiProfile": { "type": "default" }
+      "baseStats": {
+        "maxHp": 80,
+        "maxMp": 0,
+        "atk": 15,
+        "matk": 0,
+        "def": 10,
+        "speed": 12
+      },
+      "growthPerLevel": {
+        "maxHp": 130,
+        "maxMp": 0,
+        "atk": 11,
+        "matk": 0,
+        "def": 9,
+        "speed": 1
+      },
+      "skillIds": [
+        "slash"
+      ],
+      "aiProfile": {
+        "type": "default"
+      }
     },
     {
       "id": "zombie",
@@ -122,10 +268,29 @@
       "appearMinFloor": 12,
       "appearMaxFloor": 50,
       "isBoss": false,
-      "baseStats": { "maxHp": 120, "maxMp": 0, "atk": 14, "matk": 0, "def": 6, "speed": 5 },
-      "growthPerLevel": { "maxHp": 160, "maxMp": 0, "atk": 10, "matk": 0, "def": 8, "speed": 1 },
-      "skillIds": ["attack_basic", "poison_touch"],
-      "aiProfile": { "type": "default" }
+      "baseStats": {
+        "maxHp": 120,
+        "maxMp": 0,
+        "atk": 14,
+        "matk": 0,
+        "def": 6,
+        "speed": 5
+      },
+      "growthPerLevel": {
+        "maxHp": 160,
+        "maxMp": 0,
+        "atk": 10,
+        "matk": 0,
+        "def": 8,
+        "speed": 1
+      },
+      "skillIds": [
+        "attack_basic",
+        "poison_touch"
+      ],
+      "aiProfile": {
+        "type": "default"
+      }
     },
     {
       "id": "wolf",
@@ -136,10 +301,28 @@
       "appearMinFloor": 2,
       "appearMaxFloor": 25,
       "isBoss": false,
-      "baseStats": { "maxHp": 55, "maxMp": 0, "atk": 12, "matk": 0, "def": 6, "speed": 18 },
-      "growthPerLevel": { "maxHp": 110, "maxMp": 0, "atk": 11, "matk": 0, "def": 7, "speed": 2 },
-      "skillIds": ["attack_basic"],
-      "aiProfile": { "type": "default" }
+      "baseStats": {
+        "maxHp": 55,
+        "maxMp": 0,
+        "atk": 12,
+        "matk": 0,
+        "def": 6,
+        "speed": 18
+      },
+      "growthPerLevel": {
+        "maxHp": 110,
+        "maxMp": 0,
+        "atk": 11,
+        "matk": 0,
+        "def": 7,
+        "speed": 2
+      },
+      "skillIds": [
+        "attack_basic"
+      ],
+      "aiProfile": {
+        "type": "default"
+      }
     },
     {
       "id": "grizzly",
@@ -150,10 +333,29 @@
       "appearMinFloor": 20,
       "appearMaxFloor": 60,
       "isBoss": false,
-      "baseStats": { "maxHp": 180, "maxMp": 0, "atk": 25, "matk": 0, "def": 18, "speed": 8 },
-      "growthPerLevel": { "maxHp": 200, "maxMp": 0, "atk": 14, "matk": 0, "def": 11, "speed": 1 },
-      "skillIds": ["power_strike", "berserk"],
-      "aiProfile": { "type": "default" }
+      "baseStats": {
+        "maxHp": 180,
+        "maxMp": 0,
+        "atk": 25,
+        "matk": 0,
+        "def": 18,
+        "speed": 8
+      },
+      "growthPerLevel": {
+        "maxHp": 200,
+        "maxMp": 0,
+        "atk": 14,
+        "matk": 0,
+        "def": 11,
+        "speed": 1
+      },
+      "skillIds": [
+        "power_strike",
+        "berserk"
+      ],
+      "aiProfile": {
+        "type": "default"
+      }
     },
     {
       "id": "sorcerer",
@@ -164,10 +366,30 @@
       "appearMinFloor": 20,
       "appearMaxFloor": 60,
       "isBoss": false,
-      "baseStats": { "maxHp": 80, "maxMp": 60, "atk": 10, "matk": 22, "def": 9, "speed": 12 },
-      "growthPerLevel": { "maxHp": 130, "maxMp": 10, "atk": 8, "matk": 14, "def": 8, "speed": 1 },
-      "skillIds": ["thunder", "fireball", "focus"],
-      "aiProfile": { "type": "default" }
+      "baseStats": {
+        "maxHp": 80,
+        "maxMp": 60,
+        "atk": 10,
+        "matk": 22,
+        "def": 9,
+        "speed": 12
+      },
+      "growthPerLevel": {
+        "maxHp": 130,
+        "maxMp": 10,
+        "atk": 8,
+        "matk": 14,
+        "def": 8,
+        "speed": 1
+      },
+      "skillIds": [
+        "sleep_spell",
+        "fireball",
+        "focus"
+      ],
+      "aiProfile": {
+        "type": "default"
+      }
     },
     {
       "id": "fire_spirit",
@@ -178,10 +400,29 @@
       "appearMinFloor": 15,
       "appearMaxFloor": 55,
       "isBoss": false,
-      "baseStats": { "maxHp": 70, "maxMp": 80, "atk": 8, "matk": 24, "def": 8, "speed": 15 },
-      "growthPerLevel": { "maxHp": 125, "maxMp": 10, "atk": 8, "matk": 15, "def": 8, "speed": 2 },
-      "skillIds": ["fireball", "fire_storm"],
-      "aiProfile": { "type": "default" }
+      "baseStats": {
+        "maxHp": 70,
+        "maxMp": 80,
+        "atk": 8,
+        "matk": 24,
+        "def": 8,
+        "speed": 15
+      },
+      "growthPerLevel": {
+        "maxHp": 125,
+        "maxMp": 10,
+        "atk": 8,
+        "matk": 15,
+        "def": 8,
+        "speed": 2
+      },
+      "skillIds": [
+        "fireball",
+        "fire_storm"
+      ],
+      "aiProfile": {
+        "type": "default"
+      }
     },
     {
       "id": "ice_spirit",
@@ -192,10 +433,29 @@
       "appearMinFloor": 15,
       "appearMaxFloor": 55,
       "isBoss": false,
-      "baseStats": { "maxHp": 75, "maxMp": 80, "atk": 8, "matk": 22, "def": 12, "speed": 12 },
-      "growthPerLevel": { "maxHp": 130, "maxMp": 10, "atk": 8, "matk": 14, "def": 9, "speed": 1 },
-      "skillIds": ["ice_needle", "ice_storm"],
-      "aiProfile": { "type": "default" }
+      "baseStats": {
+        "maxHp": 75,
+        "maxMp": 80,
+        "atk": 8,
+        "matk": 22,
+        "def": 12,
+        "speed": 12
+      },
+      "growthPerLevel": {
+        "maxHp": 130,
+        "maxMp": 10,
+        "atk": 8,
+        "matk": 14,
+        "def": 9,
+        "speed": 1
+      },
+      "skillIds": [
+        "ice_needle",
+        "ice_storm"
+      ],
+      "aiProfile": {
+        "type": "default"
+      }
     },
     {
       "id": "wyvern",
@@ -206,10 +466,30 @@
       "appearMinFloor": 30,
       "appearMaxFloor": 80,
       "isBoss": false,
-      "baseStats": { "maxHp": 130, "maxMp": 30, "atk": 22, "matk": 12, "def": 14, "speed": 18 },
-      "growthPerLevel": { "maxHp": 180, "maxMp": 5, "atk": 13, "matk": 10, "def": 9, "speed": 2 },
-      "skillIds": ["slash", "poison_touch", "haste_buff"],
-      "aiProfile": { "type": "default" }
+      "baseStats": {
+        "maxHp": 130,
+        "maxMp": 30,
+        "atk": 22,
+        "matk": 12,
+        "def": 14,
+        "speed": 18
+      },
+      "growthPerLevel": {
+        "maxHp": 180,
+        "maxMp": 5,
+        "atk": 13,
+        "matk": 10,
+        "def": 9,
+        "speed": 2
+      },
+      "skillIds": [
+        "slash",
+        "paralyze_whip",
+        "haste_buff"
+      ],
+      "aiProfile": {
+        "type": "default"
+      }
     },
     {
       "id": "chimera",
@@ -220,10 +500,30 @@
       "appearMinFloor": 35,
       "appearMaxFloor": 85,
       "isBoss": false,
-      "baseStats": { "maxHp": 150, "maxMp": 50, "atk": 24, "matk": 20, "def": 16, "speed": 16 },
-      "growthPerLevel": { "maxHp": 200, "maxMp": 8, "atk": 14, "matk": 12, "def": 10, "speed": 2 },
-      "skillIds": ["fireball", "ice_storm", "slash"],
-      "aiProfile": { "type": "default" }
+      "baseStats": {
+        "maxHp": 150,
+        "maxMp": 50,
+        "atk": 24,
+        "matk": 20,
+        "def": 16,
+        "speed": 16
+      },
+      "growthPerLevel": {
+        "maxHp": 200,
+        "maxMp": 8,
+        "atk": 14,
+        "matk": 12,
+        "def": 10,
+        "speed": 2
+      },
+      "skillIds": [
+        "fireball",
+        "ice_storm",
+        "slash"
+      ],
+      "aiProfile": {
+        "type": "default"
+      }
     },
     {
       "id": "gargoyle",
@@ -234,10 +534,29 @@
       "appearMinFloor": 25,
       "appearMaxFloor": 70,
       "isBoss": false,
-      "baseStats": { "maxHp": 140, "maxMp": 20, "atk": 20, "matk": 10, "def": 25, "speed": 14 },
-      "growthPerLevel": { "maxHp": 190, "maxMp": 3, "atk": 13, "matk": 9, "def": 12, "speed": 1 },
-      "skillIds": ["slash", "guard"],
-      "aiProfile": { "type": "default" }
+      "baseStats": {
+        "maxHp": 140,
+        "maxMp": 20,
+        "atk": 20,
+        "matk": 10,
+        "def": 25,
+        "speed": 14
+      },
+      "growthPerLevel": {
+        "maxHp": 190,
+        "maxMp": 3,
+        "atk": 13,
+        "matk": 9,
+        "def": 12,
+        "speed": 1
+      },
+      "skillIds": [
+        "slash",
+        "guard"
+      ],
+      "aiProfile": {
+        "type": "default"
+      }
     },
     {
       "id": "golem",
@@ -248,10 +567,30 @@
       "appearMinFloor": 40,
       "appearMaxFloor": 90,
       "isBoss": false,
-      "baseStats": { "maxHp": 250, "maxMp": 0, "atk": 35, "matk": 0, "def": 40, "speed": 6 },
-      "growthPerLevel": { "maxHp": 300, "maxMp": 0, "atk": 15, "matk": 0, "def": 15, "speed": 1 },
-      "skillIds": ["power_strike", "shield", "guard"],
-      "aiProfile": { "type": "default" }
+      "baseStats": {
+        "maxHp": 250,
+        "maxMp": 0,
+        "atk": 35,
+        "matk": 0,
+        "def": 40,
+        "speed": 6
+      },
+      "growthPerLevel": {
+        "maxHp": 300,
+        "maxMp": 0,
+        "atk": 15,
+        "matk": 0,
+        "def": 15,
+        "speed": 1
+      },
+      "skillIds": [
+        "power_strike",
+        "shield",
+        "guard"
+      ],
+      "aiProfile": {
+        "type": "default"
+      }
     },
     {
       "id": "mimic",
@@ -262,10 +601,30 @@
       "appearMinFloor": 15,
       "appearMaxFloor": 100,
       "isBoss": false,
-      "baseStats": { "maxHp": 100, "maxMp": 40, "atk": 30, "matk": 15, "def": 20, "speed": 12 },
-      "growthPerLevel": { "maxHp": 150, "maxMp": 6, "atk": 14, "matk": 11, "def": 10, "speed": 1 },
-      "skillIds": ["attack_basic", "poison_touch", "drain"],
-      "aiProfile": { "type": "default" }
+      "baseStats": {
+        "maxHp": 100,
+        "maxMp": 40,
+        "atk": 30,
+        "matk": 15,
+        "def": 20,
+        "speed": 12
+      },
+      "growthPerLevel": {
+        "maxHp": 150,
+        "maxMp": 6,
+        "atk": 14,
+        "matk": 11,
+        "def": 10,
+        "speed": 1
+      },
+      "skillIds": [
+        "attack_basic",
+        "paralyze_whip",
+        "drain"
+      ],
+      "aiProfile": {
+        "type": "default"
+      }
     },
     {
       "id": "wraith",
@@ -276,10 +635,30 @@
       "appearMinFloor": 30,
       "appearMaxFloor": 75,
       "isBoss": false,
-      "baseStats": { "maxHp": 90, "maxMp": 100, "atk": 10, "matk": 30, "def": 12, "speed": 16 },
-      "growthPerLevel": { "maxHp": 140, "maxMp": 15, "atk": 8, "matk": 16, "def": 8, "speed": 2 },
-      "skillIds": ["ice_storm", "drain", "mind_blast"],
-      "aiProfile": { "type": "default" }
+      "baseStats": {
+        "maxHp": 90,
+        "maxMp": 100,
+        "atk": 10,
+        "matk": 30,
+        "def": 12,
+        "speed": 16
+      },
+      "growthPerLevel": {
+        "maxHp": 140,
+        "maxMp": 15,
+        "atk": 8,
+        "matk": 16,
+        "def": 8,
+        "speed": 2
+      },
+      "skillIds": [
+        "ice_storm",
+        "drain",
+        "mind_blast"
+      ],
+      "aiProfile": {
+        "type": "default"
+      }
     },
     {
       "id": "dark_knight",
@@ -290,10 +669,30 @@
       "appearMinFloor": 50,
       "appearMaxFloor": 95,
       "isBoss": false,
-      "baseStats": { "maxHp": 220, "maxMp": 40, "atk": 32, "matk": 15, "def": 30, "speed": 14 },
-      "growthPerLevel": { "maxHp": 250, "maxMp": 5, "atk": 16, "matk": 10, "def": 13, "speed": 1 },
-      "skillIds": ["slash", "power_strike", "shield"],
-      "aiProfile": { "type": "default" }
+      "baseStats": {
+        "maxHp": 220,
+        "maxMp": 40,
+        "atk": 32,
+        "matk": 15,
+        "def": 30,
+        "speed": 14
+      },
+      "growthPerLevel": {
+        "maxHp": 250,
+        "maxMp": 5,
+        "atk": 16,
+        "matk": 10,
+        "def": 13,
+        "speed": 1
+      },
+      "skillIds": [
+        "slash",
+        "power_strike",
+        "shield"
+      ],
+      "aiProfile": {
+        "type": "default"
+      }
     },
     {
       "id": "demon",
@@ -304,10 +703,30 @@
       "appearMinFloor": 55,
       "appearMaxFloor": 100,
       "isBoss": false,
-      "baseStats": { "maxHp": 200, "maxMp": 80, "atk": 30, "matk": 35, "def": 24, "speed": 16 },
-      "growthPerLevel": { "maxHp": 240, "maxMp": 12, "atk": 15, "matk": 18, "def": 11, "speed": 2 },
-      "skillIds": ["fire_storm", "blizzard", "drain"],
-      "aiProfile": { "type": "default" }
+      "baseStats": {
+        "maxHp": 200,
+        "maxMp": 80,
+        "atk": 30,
+        "matk": 35,
+        "def": 24,
+        "speed": 16
+      },
+      "growthPerLevel": {
+        "maxHp": 240,
+        "maxMp": 12,
+        "atk": 15,
+        "matk": 18,
+        "def": 11,
+        "speed": 2
+      },
+      "skillIds": [
+        "fire_storm",
+        "silence_spell",
+        "drain"
+      ],
+      "aiProfile": {
+        "type": "default"
+      }
     },
     {
       "id": "king_slime",
@@ -318,10 +737,32 @@
       "appearMinFloor": 20,
       "appearMaxFloor": 100,
       "isBoss": true,
-      "baseStats": { "maxHp": 600, "maxMp": 100, "atk": 30, "matk": 20, "def": 25, "speed": 10 },
-      "growthPerLevel": { "maxHp": 600, "maxMp": 10, "atk": 12, "matk": 10, "def": 10, "speed": 1 },
-      "skillIds": ["attack_basic", "heal_small", "haste_buff", "giga_heal"],
-      "aiProfile": { "type": "aggressive", "multiAction": false }
+      "baseStats": {
+        "maxHp": 600,
+        "maxMp": 100,
+        "atk": 30,
+        "matk": 20,
+        "def": 25,
+        "speed": 10
+      },
+      "growthPerLevel": {
+        "maxHp": 600,
+        "maxMp": 10,
+        "atk": 12,
+        "matk": 10,
+        "def": 10,
+        "speed": 1
+      },
+      "skillIds": [
+        "attack_basic",
+        "heal_small",
+        "haste_buff",
+        "giga_heal"
+      ],
+      "aiProfile": {
+        "type": "aggressive",
+        "multiAction": false
+      }
     },
     {
       "id": "goblin_king",
@@ -332,10 +773,32 @@
       "appearMinFloor": 25,
       "appearMaxFloor": 100,
       "isBoss": true,
-      "baseStats": { "maxHp": 550, "maxMp": 50, "atk": 35, "matk": 15, "def": 28, "speed": 14 },
-      "growthPerLevel": { "maxHp": 550, "maxMp": 8, "atk": 14, "matk": 10, "def": 11, "speed": 1 },
-      "skillIds": ["slash", "power_strike", "war_cry", "shield"],
-      "aiProfile": { "type": "aggressive", "multiAction": false }
+      "baseStats": {
+        "maxHp": 550,
+        "maxMp": 50,
+        "atk": 35,
+        "matk": 15,
+        "def": 28,
+        "speed": 14
+      },
+      "growthPerLevel": {
+        "maxHp": 550,
+        "maxMp": 8,
+        "atk": 14,
+        "matk": 10,
+        "def": 11,
+        "speed": 1
+      },
+      "skillIds": [
+        "slash",
+        "power_strike",
+        "war_cry",
+        "shield"
+      ],
+      "aiProfile": {
+        "type": "aggressive",
+        "multiAction": false
+      }
     },
     {
       "id": "lich",
@@ -346,10 +809,32 @@
       "appearMinFloor": 60,
       "appearMaxFloor": 100,
       "isBoss": true,
-      "baseStats": { "maxHp": 450, "maxMp": 300, "atk": 15, "matk": 50, "def": 20, "speed": 18 },
-      "growthPerLevel": { "maxHp": 500, "maxMp": 30, "atk": 10, "matk": 18, "def": 10, "speed": 2 },
-      "skillIds": ["ice_storm", "soul_drain", "mind_blast", "dark_pulse"],
-      "aiProfile": { "type": "aggressive", "multiAction": true }
+      "baseStats": {
+        "maxHp": 450,
+        "maxMp": 300,
+        "atk": 15,
+        "matk": 50,
+        "def": 20,
+        "speed": 18
+      },
+      "growthPerLevel": {
+        "maxHp": 500,
+        "maxMp": 30,
+        "atk": 10,
+        "matk": 18,
+        "def": 10,
+        "speed": 2
+      },
+      "skillIds": [
+        "ice_storm",
+        "soul_drain",
+        "mind_blast",
+        "dark_pulse"
+      ],
+      "aiProfile": {
+        "type": "aggressive",
+        "multiAction": true
+      }
     },
     {
       "id": "dragon_boss",
@@ -360,10 +845,33 @@
       "appearMinFloor": 10,
       "appearMaxFloor": 100,
       "isBoss": true,
-      "baseStats": { "maxHp": 800, "maxMp": 100, "atk": 45, "matk": 30, "def": 35, "speed": 20 },
-      "growthPerLevel": { "maxHp": 800, "maxMp": 10, "atk": 16, "matk": 12, "def": 12, "speed": 2 },
-      "skillIds": ["slash", "fire_storm", "war_cry", "ultimate_slash", "inferno"],
-      "aiProfile": { "type": "aggressive", "multiAction": true }
+      "baseStats": {
+        "maxHp": 800,
+        "maxMp": 100,
+        "atk": 45,
+        "matk": 30,
+        "def": 35,
+        "speed": 20
+      },
+      "growthPerLevel": {
+        "maxHp": 800,
+        "maxMp": 10,
+        "atk": 16,
+        "matk": 12,
+        "def": 12,
+        "speed": 2
+      },
+      "skillIds": [
+        "slash",
+        "fire_storm",
+        "war_cry",
+        "ultimate_slash",
+        "inferno"
+      ],
+      "aiProfile": {
+        "type": "aggressive",
+        "multiAction": true
+      }
     },
     {
       "id": "beholder",
@@ -374,10 +882,33 @@
       "appearMinFloor": 70,
       "appearMaxFloor": 100,
       "isBoss": true,
-      "baseStats": { "maxHp": 700, "maxMp": 400, "atk": 20, "matk": 60, "def": 25, "speed": 22 },
-      "growthPerLevel": { "maxHp": 700, "maxMp": 40, "atk": 10, "matk": 20, "def": 11, "speed": 2 },
-      "skillIds": ["thunder", "tornado", "mind_blast", "focus", "meditation"],
-      "aiProfile": { "type": "aggressive", "multiAction": true }
+      "baseStats": {
+        "maxHp": 700,
+        "maxMp": 400,
+        "atk": 20,
+        "matk": 60,
+        "def": 25,
+        "speed": 22
+      },
+      "growthPerLevel": {
+        "maxHp": 700,
+        "maxMp": 40,
+        "atk": 10,
+        "matk": 20,
+        "def": 11,
+        "speed": 2
+      },
+      "skillIds": [
+        "thunder",
+        "flash",
+        "mind_blast",
+        "focus",
+        "meditation"
+      ],
+      "aiProfile": {
+        "type": "aggressive",
+        "multiAction": true
+      }
     },
     {
       "id": "great_demon",
@@ -388,10 +919,33 @@
       "appearMinFloor": 90,
       "appearMaxFloor": 100,
       "isBoss": true,
-      "baseStats": { "maxHp": 1200, "maxMp": 500, "atk": 55, "matk": 55, "def": 45, "speed": 25 },
-      "growthPerLevel": { "maxHp": 1000, "maxMp": 60, "atk": 20, "matk": 20, "def": 15, "speed": 3 },
-      "skillIds": ["meteor", "ultimate_slash", "quake", "dark_pulse", "war_cry"],
-      "aiProfile": { "type": "aggressive", "multiAction": true }
+      "baseStats": {
+        "maxHp": 1200,
+        "maxMp": 500,
+        "atk": 55,
+        "matk": 55,
+        "def": 45,
+        "speed": 25
+      },
+      "growthPerLevel": {
+        "maxHp": 1000,
+        "maxMp": 60,
+        "atk": 20,
+        "matk": 20,
+        "def": 15,
+        "speed": 3
+      },
+      "skillIds": [
+        "meteor",
+        "ultimate_slash",
+        "quake",
+        "dark_pulse",
+        "war_cry"
+      ],
+      "aiProfile": {
+        "type": "aggressive",
+        "multiAction": true
+      }
     },
     {
       "id": "shadow",
@@ -402,10 +956,28 @@
       "appearMinFloor": 5,
       "appearMaxFloor": 40,
       "isBoss": false,
-      "baseStats": { "maxHp": 40, "maxMp": 30, "atk": 16, "matk": 10, "def": 5, "speed": 25 },
-      "growthPerLevel": { "maxHp": 100, "maxMp": 5, "atk": 11, "matk": 9, "def": 8, "speed": 3 },
-      "skillIds": ["attack_basic"],
-      "aiProfile": { "type": "default" }
+      "baseStats": {
+        "maxHp": 40,
+        "maxMp": 30,
+        "atk": 16,
+        "matk": 10,
+        "def": 5,
+        "speed": 25
+      },
+      "growthPerLevel": {
+        "maxHp": 100,
+        "maxMp": 5,
+        "atk": 11,
+        "matk": 9,
+        "def": 8,
+        "speed": 3
+      },
+      "skillIds": [
+        "attack_basic"
+      ],
+      "aiProfile": {
+        "type": "default"
+      }
     },
     {
       "id": "harpy",
@@ -416,10 +988,29 @@
       "appearMinFloor": 10,
       "appearMaxFloor": 50,
       "isBoss": false,
-      "baseStats": { "maxHp": 85, "maxMp": 40, "atk": 14, "matk": 18, "def": 10, "speed": 20 },
-      "growthPerLevel": { "maxHp": 110, "maxMp": 8, "atk": 10, "matk": 12, "def": 8, "speed": 2 },
-      "skillIds": ["attack_basic", "haste_buff"],
-      "aiProfile": { "type": "default" }
+      "baseStats": {
+        "maxHp": 85,
+        "maxMp": 40,
+        "atk": 14,
+        "matk": 18,
+        "def": 10,
+        "speed": 20
+      },
+      "growthPerLevel": {
+        "maxHp": 110,
+        "maxMp": 8,
+        "atk": 10,
+        "matk": 12,
+        "def": 8,
+        "speed": 2
+      },
+      "skillIds": [
+        "attack_basic",
+        "sleep_spell"
+      ],
+      "aiProfile": {
+        "type": "default"
+      }
     }
   ]
 }

@@ -3,13 +3,15 @@ import { Stats } from "./types";
 export function scalePlayerStats(base: Stats, growth: any, level: number): Stats {
   const lv = Math.max(1, level);
   const add = (key: keyof Stats) => base[key] + (lv - 1) * (growth?.[key] ?? 0);
-  
+
   // HP/MPのインフレ倍率を調整（Lv100で約821倍）
   const hpLvl = 1 + lv * 0.2 + Math.pow(lv, 2) * 0.08;
-  
+  // MPはインフレさせない（基礎+成長の線形増加のみ）
+  const mpLvl = 1;
+
   return {
     maxHp: Math.floor(add("maxHp") * hpLvl),
-    maxMp: Math.floor(add("maxMp") * hpLvl),
+    maxMp: Math.floor(add("maxMp") * mpLvl),
     atk: add("atk"),
     matk: add("matk"),
     def: add("def"),

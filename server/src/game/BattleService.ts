@@ -10,7 +10,7 @@ import { enemyTurn } from "./EnemyAI";
 import { calcExpReward } from "./ExperienceService";
 
 export class BattleService {
-  constructor(private store: BattleMemoryStore, private masters: Masters) {}
+  constructor(private store: BattleMemoryStore, private masters: Masters) { }
 
   startBattle(params: {
     floor: number;
@@ -95,10 +95,28 @@ export class BattleService {
     };
     if (state.winner === "party") {
       const expStockAdd = calcExpReward({
-        enemies: state.enemies.map((e) => ({ level: e.level, baseExp: e.baseExp })),
+        enemies: state.enemies.map((e) => ({ level: e.level, baseExp: e.baseExp ?? 0 })),
       });
       deltaState.expStockAdd = expStockAdd;
       state.log.push(`勝利！ 経験値ストック +${expStockAdd}`);
+
+      // ボス階層（10階層ごと）クリア時のアイテム報酬
+      if (state.floor % 10 === 0) {
+        // ランダムで報酬を決定 (例: ハイポーション、ハイエーテル、気付け薬)
+        const rewards = [
+          { id: "high_potion", name: "ハイポーション", count: 2 },
+          { id: "high_ether", name: "ハイエーテル", count: 2 },
+          { id: "revival_bead", name: "気付け薬", count: 1 },
+        ];
+        // 簡易的にランダム1種
+        const reward = rewards[Math.floor(Math.random() * rewards.length)];
+
+        // 付与
+        if (reward) {
+          state.items[reward.id] = (state.items[reward.id] ?? 0) + reward.count;
+          state.log.push(`ボス撃破ボーナス！ ${reward.name} x${reward.count} を手に入れた！`);
+        }
+      }
     } else if (state.winner === "enemies") {
       deltaState.gameOver = true;
       deltaState.resetState = true; // クライアントはこの後 /api/state/reset を呼ぶ想定
@@ -121,6 +139,19 @@ export class BattleService {
         (Array.isArray(st?.skillIds) && st.skillIds.length > 0)
           ? st.skillIds
           : (Array.isArray(m?.initialSkillIds) ? m.initialSkillIds : []);
+
+      const skillLevels: Record<string, number> = {};
+      // state.skills からレベルを取得
+      if (state?.skills) {
+        learnedSkillIds.forEach((sid: string) => {
+          if (state.skills[sid]?.level) {
+            skillLevels[sid] = state.skills[sid].level;
+          } else {
+            skillLevels[sid] = 1;
+          }
+        });
+      }
+
       return {
         id: `pc_${id}_${idx}`,
         name: m?.name ?? id,
@@ -132,6 +163,7 @@ export class BattleService {
         conditions: [],
         guard: false,
         skillIds: learnedSkillIds.length > 0 ? learnedSkillIds : ["attack_basic"],
+        skillLevels,
       };
     });
   }
@@ -155,8 +187,12 @@ function autoEnemyTurns(state: BattleState, masters: Masters) {
     }
     if (!actor.isEnemy) break; // stop when it's a player's turn
 
-    startOfTurn(actor, state.log);
-    enemyTurn(state);
+    const start = startOfTurn(actor, state.log);
+    if (start.stunned) {
+      state.log.push(`${actor.name} は行動できない！`);
+    } else {
+      enemyTurn(state, masters);
+    }
     endOfTurn(actor);
     advanceCursor(state);
     determineWinner(state);

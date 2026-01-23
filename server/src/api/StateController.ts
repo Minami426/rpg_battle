@@ -133,11 +133,13 @@ router.post("/apply-item", authGuard, async (req, res) => {
 
     // apply
     if (item.effect?.kind === "heal_hp") {
-      const power = item.effect.power ?? 0;
-      ch.hp = Math.min(stats.maxHp, (ch.hp ?? stats.maxHp) + power);
+      const percent = item.effect.power ?? 0;
+      const heal = Math.floor(stats.maxHp * (percent / 100));
+      ch.hp = Math.min(stats.maxHp, (ch.hp ?? stats.maxHp) + heal);
     } else if (item.effect?.kind === "heal_mp") {
-      const power = item.effect.power ?? 0;
-      ch.mp = Math.min(stats.maxMp, (ch.mp ?? stats.maxMp) + power);
+      const percent = item.effect.power ?? 0;
+      const heal = Math.floor(stats.maxMp * (percent / 100));
+      ch.mp = Math.min(stats.maxMp, (ch.mp ?? stats.maxMp) + heal);
     } else if (item.effect?.kind === "heal_full") {
       ch.hp = stats.maxHp;
       ch.mp = stats.maxMp;

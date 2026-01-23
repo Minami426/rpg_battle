@@ -9,7 +9,10 @@
       "target": "ally",
       "battleUsable": true,
       "maxStack": 99,
-      "effect": { "kind": "heal_hp", "power": 30 }
+      "effect": {
+        "kind": "heal_hp",
+        "power": 30
+      }
     },
     {
       "id": "ether",
@@ -19,7 +22,10 @@
       "target": "ally",
       "battleUsable": true,
       "maxStack": 99,
-      "effect": { "kind": "heal_mp", "power": 20 }
+      "effect": {
+        "kind": "heal_mp",
+        "power": 20
+      }
     },
     {
       "id": "elixir",
@@ -29,7 +35,92 @@
       "target": "ally",
       "battleUsable": true,
       "maxStack": 99,
-      "effect": { "kind": "heal_full", "power": 0 }
+      "effect": {
+        "kind": "heal_full",
+        "power": 0
+      }
+    },
+    {
+      "id": "high_potion",
+      "name": "ハイポーション",
+      "description": "味方単体のHPを100回復",
+      "type": "potion",
+      "target": "ally",
+      "battleUsable": true,
+      "maxStack": 99,
+      "effect": {
+        "kind": "heal_hp",
+        "power": 100
+      }
+    },
+    {
+      "id": "mega_potion",
+      "name": "メガポーション",
+      "description": "味方単体のHPを300回復",
+      "type": "potion",
+      "target": "ally",
+      "battleUsable": true,
+      "maxStack": 99,
+      "effect": {
+        "kind": "heal_hp",
+        "power": 300
+      }
+    },
+    {
+      "id": "high_ether",
+      "name": "ハイエーテル",
+      "description": "味方単体のMPを50回復",
+      "type": "ether",
+      "target": "ally",
+      "battleUsable": true,
+      "maxStack": 99,
+      "effect": {
+        "kind": "heal_mp",
+        "power": 50
+      }
+    },
+    {
+      "id": "revival_bead",
+      "name": "気付け薬",
+      "description": "戦闘不能の味方をHP50%で蘇生",
+      "type": "revive",
+      "target": "ally",
+      "battleUsable": true,
+      "maxStack": 99,
+      "effect": {
+        "kind": "revive",
+        "power": 50
+      }
+    },
+    {
+      "id": "power_drug",
+      "name": "力の薬",
+      "description": "一時的に攻撃力を上昇",
+      "type": "buff",
+      "target": "ally",
+      "battleUsable": true,
+      "maxStack": 99,
+      "effect": {
+        "kind": "buff",
+        "stat": "atk",
+        "power": 0.5,
+        "duration": 3
+      }
+    },
+    {
+      "id": "magic_water",
+      "name": "魔力の水",
+      "description": "一時的に魔法攻撃力を上昇",
+      "type": "buff",
+      "target": "ally",
+      "battleUsable": true,
+      "maxStack": 99,
+      "effect": {
+        "kind": "buff",
+        "stat": "matk",
+        "power": 0.5,
+        "duration": 3
+      }
     }
   ]
 }

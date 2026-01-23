@@ -72,6 +72,66 @@
       "value": -10,
       "valueType": "add",
       "duration": 3
+    },
+    {
+      "id": "sleep",
+      "name": "睡眠",
+      "conditionType": "stun",
+      "duration": 3
+    },
+    {
+      "id": "paralysis",
+      "name": "麻痺",
+      "conditionType": "stun",
+      "duration": 2
+    },
+    {
+      "id": "silence",
+      "name": "沈黙",
+      "conditionType": "silence",
+      "duration": 3
+    },
+    {
+      "id": "blind",
+      "name": "暗闇",
+      "conditionType": "blind",
+      "duration": 3
+    },
+    {
+      "id": "debuff_atk",
+      "name": "攻撃低下",
+      "conditionType": "debuff",
+      "stat": "atk",
+      "value": -0.3,
+      "valueType": "multiply",
+      "duration": 3
+    },
+    {
+      "id": "debuff_def",
+      "name": "守備低下",
+      "conditionType": "debuff",
+      "stat": "def",
+      "value": -0.3,
+      "valueType": "multiply",
+      "duration": 3
+    },
+    {
+      "id": "debuff_speed",
+      "name": "速度低下",
+      "conditionType": "debuff",
+      "stat": "speed",
+      "value": -0.3,
+      "valueType": "multiply",
+      "duration": 3
+    },
+    {
+      "id": "debuff_matk",
+      "name": "魔力低下",
+      "conditionType": "debuff",
+      "stat": "matk",
+      "value": -0.3,
+      "valueType": "multiply",
+      "duration": 3
     }
   ]
 }

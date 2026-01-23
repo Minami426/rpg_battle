@@ -167,9 +167,9 @@ async function main() {
           c.id,
           c.name,
           c.conditionType,
-          c.stat,
-          c.value,
-          c.valueType,
+          c.stat || null,
+          c.value !== undefined ? c.value : null,
+          c.valueType || null,
           c.duration,
         ]
       );

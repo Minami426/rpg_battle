@@ -20,6 +20,13 @@ const levelSelectType = ref<"character" | "skill">("character");
 const levelSelectId = ref<string>("");
 const allocateAmount = ref(0);
 
+const hoverItemId = ref("");
+const hoverItemDescription = computed(() => {
+  if (!masters.value || !hoverItemId.value) return "";
+  const item = masters.value.items.data.find((i: any) => i.id === hoverItemId.value);
+  return item?.description ?? "";
+});
+
 const loadMasters = async () => {
   if (masters.value) return;
   const res = await fetch("/api/master", { credentials: "include" });
@@ -50,6 +57,7 @@ const menuDescriptions: Record<string, string> = {
 
 const currentDescription = computed(() => {
   const id = menuOptions.value[cursor.value]?.id;
+  if (!id) return "";
   return menuDescriptions[id] || "";
 });
 
@@ -64,9 +72,10 @@ const ownedItems = computed(() => {
   if (!masters.value || !appState.state) return [];
   const owned = appState.state.items ?? {};
   return masters.value.items.data
-    .map((it: any) => ({ ...it, qty: owned[it.id] ?? 0 }))
+    .map((it: any) => ({ ...it, qty: (owned as any)[it.id] ?? 0 }))
     .filter((it: any) => it.qty > 0);
 });
+
 
 const partyTargets = computed(() => {
   if (!appState.state || !masters.value) return [];
@@ -124,7 +133,7 @@ const selectedInfo = computed(() => {
   if (levelSelectType.value === "character") {
     return partyList.value.find((p) => p.id === levelSelectId.value);
   }
-  return skillList.value.find((s) => s.id === levelSelectId.value);
+  return skillList.value.find((s: any) => s.id === levelSelectId.value);
 });
 
 const nextCharExp = (level: number) => Math.floor(50 * level * level);
@@ -441,11 +450,14 @@ onUnmounted(() => window.removeEventListener("keydown", onKey));
           <button
             v-for="(it, idx) in ownedItems"
             :key="it.id"
-            class="cmd"
+            class="cmd item-row"
             :class="{ selected: cursor === Number(idx) + 1 }"
             @click="openItemTarget(it.id)"
+            @mouseenter="hoverItemId = it.id"
+            @mouseleave="hoverItemId = ''"
           >
             {{ it.name }} (x{{ it.qty }})
+            <span v-if="hoverItemId === it.id" class="item-tooltip">{{ hoverItemDescription }}</span>
           </button>
         </div>
 
@@ -555,6 +567,21 @@ onUnmounted(() => window.removeEventListener("keydown", onKey));
   color: #fff;
   padding: 6px 8px;
   min-width: 180px;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.6);
+}
+.item-row { position: relative; }
+.item-tooltip {
+  position: absolute;
+  left: 100%;
+  top: 0;
+  margin-left: 8px;
+  z-index: 9999;
+  background: #111;
+  border: 1px solid #444;
+  padding: 6px 8px;
+  color: #fff;
+  min-width: 200px;
+  white-space: normal;
   box-shadow: 0 0 6px rgba(0, 0, 0, 0.6);
 }
 </style>

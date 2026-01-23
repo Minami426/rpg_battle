@@ -9,7 +9,7 @@ export type Stats = {
 
 export type ConditionInstance = {
   id: string;
-  kind: "dot" | "buff" | "debuff" | "stun";
+  kind: "dot" | "buff" | "debuff" | "stun" | "silence" | "blind";
   stat?: string;
   value?: number;
   valueType?: "add" | "multiply";
@@ -27,6 +27,7 @@ export type Combatant = {
   conditions: ConditionInstance[];
   guard: boolean;
   skillIds: string[];
+  skillLevels?: Record<string, number>;
   baseExp?: number;
 };
 

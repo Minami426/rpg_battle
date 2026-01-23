@@ -61,7 +61,9 @@
       "accuracy": 0.88,
       "conditions": [],
       "unlockLevel": 6,
-      "prerequisiteIds": ["slash"],
+      "prerequisiteIds": [
+        "slash"
+      ],
       "isPassive": false
     },
     {
@@ -82,7 +84,9 @@
       "accuracy": 0.9,
       "conditions": [],
       "unlockLevel": 10,
-      "prerequisiteIds": ["slash"],
+      "prerequisiteIds": [
+        "slash"
+      ],
       "isPassive": false
     },
     {
@@ -103,7 +107,9 @@
       "accuracy": 0.85,
       "conditions": [],
       "unlockLevel": 25,
-      "prerequisiteIds": ["double_strike"],
+      "prerequisiteIds": [
+        "double_strike"
+      ],
       "isPassive": false
     },
     {
@@ -124,7 +130,9 @@
       "accuracy": 0.9,
       "conditions": [],
       "unlockLevel": 12,
-      "prerequisiteIds": ["slash"],
+      "prerequisiteIds": [
+        "slash"
+      ],
       "isPassive": false
     },
     {
@@ -166,7 +174,9 @@
       "accuracy": 0.95,
       "conditions": [],
       "unlockLevel": 40,
-      "prerequisiteIds": ["power_strike"],
+      "prerequisiteIds": [
+        "power_strike"
+      ],
       "isPassive": false
     },
     {
@@ -186,7 +196,10 @@
       "costType": "mp",
       "accuracy": 0.95,
       "conditions": [
-        { "conditionId": "burn", "chance": 0.2 }
+        {
+          "conditionId": "burn",
+          "chance": 0.2
+        }
       ],
       "unlockLevel": 1,
       "prerequisiteIds": [],
@@ -209,10 +222,15 @@
       "costType": "mp",
       "accuracy": 0.92,
       "conditions": [
-        { "conditionId": "burn", "chance": 0.15 }
+        {
+          "conditionId": "burn",
+          "chance": 0.15
+        }
       ],
       "unlockLevel": 12,
-      "prerequisiteIds": ["fireball"],
+      "prerequisiteIds": [
+        "fireball"
+      ],
       "isPassive": false
     },
     {
@@ -232,10 +250,15 @@
       "costType": "mp",
       "accuracy": 0.95,
       "conditions": [
-        { "conditionId": "burn", "chance": 0.4 }
+        {
+          "conditionId": "burn",
+          "chance": 0.4
+        }
       ],
       "unlockLevel": 35,
-      "prerequisiteIds": ["fire_storm"],
+      "prerequisiteIds": [
+        "fire_storm"
+      ],
       "isPassive": false
     },
     {
@@ -277,7 +300,9 @@
       "accuracy": 0.94,
       "conditions": [],
       "unlockLevel": 15,
-      "prerequisiteIds": ["ice_needle"],
+      "prerequisiteIds": [
+        "ice_needle"
+      ],
       "isPassive": false
     },
     {
@@ -298,7 +323,9 @@
       "accuracy": 0.93,
       "conditions": [],
       "unlockLevel": 8,
-      "prerequisiteIds": ["ice_needle"],
+      "prerequisiteIds": [
+        "ice_needle"
+      ],
       "isPassive": false
     },
     {
@@ -340,7 +367,9 @@
       "accuracy": 0.88,
       "conditions": [],
       "unlockLevel": 30,
-      "prerequisiteIds": ["thunder"],
+      "prerequisiteIds": [
+        "thunder"
+      ],
       "isPassive": false
     },
     {
@@ -381,7 +410,11 @@
       "costType": "mp",
       "accuracy": 0.95,
       "conditions": [
-        { "conditionId": "poison", "chance": 0.35, "durationOverride": 3 }
+        {
+          "conditionId": "poison",
+          "chance": 0.35,
+          "durationOverride": 3
+        }
       ],
       "unlockLevel": 1,
       "prerequisiteIds": [],
@@ -404,10 +437,16 @@
       "costType": "mp",
       "accuracy": 0.92,
       "conditions": [
-        { "conditionId": "poison", "chance": 0.45, "durationOverride": 3 }
+        {
+          "conditionId": "poison",
+          "chance": 0.45,
+          "durationOverride": 3
+        }
       ],
       "unlockLevel": 10,
-      "prerequisiteIds": ["poison_touch"],
+      "prerequisiteIds": [
+        "poison_touch"
+      ],
       "isPassive": false
     },
     {
@@ -428,7 +467,9 @@
       "accuracy": 0.95,
       "conditions": [],
       "unlockLevel": 12,
-      "prerequisiteIds": ["poison_touch"],
+      "prerequisiteIds": [
+        "poison_touch"
+      ],
       "isPassive": false
     },
     {
@@ -449,7 +490,9 @@
       "accuracy": 0.98,
       "conditions": [],
       "unlockLevel": 30,
-      "prerequisiteIds": ["drain"],
+      "prerequisiteIds": [
+        "drain"
+      ],
       "isPassive": false
     },
     {
@@ -491,7 +534,9 @@
       "accuracy": 1.0,
       "conditions": [],
       "unlockLevel": 10,
-      "prerequisiteIds": ["heal_small"],
+      "prerequisiteIds": [
+        "heal_small"
+      ],
       "isPassive": false
     },
     {
@@ -512,7 +557,9 @@
       "accuracy": 1.0,
       "conditions": [],
       "unlockLevel": 35,
-      "prerequisiteIds": ["mega_heal"],
+      "prerequisiteIds": [
+        "mega_heal"
+      ],
       "isPassive": false
     },
     {
@@ -533,7 +580,9 @@
       "accuracy": 1.0,
       "conditions": [],
       "unlockLevel": 15,
-      "prerequisiteIds": ["heal_small"],
+      "prerequisiteIds": [
+        "heal_small"
+      ],
       "isPassive": false
     },
     {
@@ -554,7 +603,9 @@
       "accuracy": 1.0,
       "conditions": [],
       "unlockLevel": 18,
-      "prerequisiteIds": ["heal_small"],
+      "prerequisiteIds": [
+        "heal_small"
+      ],
       "isPassive": false
     },
     {
@@ -595,7 +646,11 @@
       "costType": "mp",
       "accuracy": 1.0,
       "conditions": [
-        { "conditionId": "buff_atk", "chance": 1.0, "durationOverride": 3 }
+        {
+          "conditionId": "buff_atk",
+          "chance": 1.0,
+          "durationOverride": 3
+        }
       ],
       "unlockLevel": 12,
       "prerequisiteIds": [],
@@ -618,7 +673,11 @@
       "costType": "mp",
       "accuracy": 1.0,
       "conditions": [
-        { "conditionId": "buff_def", "chance": 1.0, "durationOverride": 3 }
+        {
+          "conditionId": "buff_def",
+          "chance": 1.0,
+          "durationOverride": 3
+        }
       ],
       "unlockLevel": 14,
       "prerequisiteIds": [],
@@ -641,7 +700,11 @@
       "costType": "mp",
       "accuracy": 1.0,
       "conditions": [
-        { "conditionId": "buff_speed", "chance": 1.0, "durationOverride": 3 }
+        {
+          "conditionId": "buff_speed",
+          "chance": 1.0,
+          "durationOverride": 3
+        }
       ],
       "unlockLevel": 3,
       "prerequisiteIds": [],
@@ -664,7 +727,11 @@
       "costType": "mp",
       "accuracy": 1.0,
       "conditions": [
-        { "conditionId": "guard_state", "chance": 1.0, "durationOverride": 1 }
+        {
+          "conditionId": "guard_state",
+          "chance": 1.0,
+          "durationOverride": 1
+        }
       ],
       "unlockLevel": 1,
       "prerequisiteIds": [],
@@ -687,7 +754,11 @@
       "costType": "mp",
       "accuracy": 1.0,
       "conditions": [
-        { "conditionId": "buff_matk", "chance": 1.0, "durationOverride": 3 }
+        {
+          "conditionId": "buff_matk",
+          "chance": 1.0,
+          "durationOverride": 3
+        }
       ],
       "unlockLevel": 10,
       "prerequisiteIds": [],
@@ -710,10 +781,16 @@
       "costType": "mp",
       "accuracy": 1.0,
       "conditions": [
-        { "conditionId": "regen", "chance": 1.0, "durationOverride": 3 }
+        {
+          "conditionId": "regen",
+          "chance": 1.0,
+          "durationOverride": 3
+        }
       ],
       "unlockLevel": 20,
-      "prerequisiteIds": ["heal_small"],
+      "prerequisiteIds": [
+        "heal_small"
+      ],
       "isPassive": false
     },
     {
@@ -732,7 +809,13 @@
       "cost": 8,
       "costType": "mp",
       "accuracy": 0.9,
-      "conditions": [],
+      "conditions": [
+        {
+          "conditionId": "debuff_matk",
+          "chance": 1.0,
+          "durationOverride": 3
+        }
+      ],
       "unlockLevel": 15,
       "prerequisiteIds": [],
       "isPassive": false
@@ -796,7 +879,11 @@
       "costType": "mp",
       "accuracy": 1.0,
       "conditions": [
-        { "conditionId": "buff_atk", "chance": 1.0, "durationOverride": 5 }
+        {
+          "conditionId": "buff_atk",
+          "chance": 1.0,
+          "durationOverride": 5
+        }
       ],
       "unlockLevel": 30,
       "prerequisiteIds": [],
@@ -820,6 +907,185 @@
       "accuracy": 0.9,
       "conditions": [],
       "unlockLevel": 45,
+      "prerequisiteIds": [],
+      "isPassive": false
+    },
+    {
+      "id": "sleep_spell",
+      "name": "スリープ",
+      "description": "敵単体を眠らせて行動不能にする",
+      "skillType": "debuff",
+      "targetType": "enemy",
+      "range": "single",
+      "power": 0,
+      "powerType": "magical",
+      "element": "none",
+      "scaling": "matk",
+      "critRate": 0,
+      "cost": 5,
+      "costType": "mp",
+      "accuracy": 0.85,
+      "conditions": [
+        {
+          "conditionId": "sleep",
+          "chance": 0.7
+        }
+      ],
+      "unlockLevel": 5,
+      "prerequisiteIds": [],
+      "isPassive": false
+    },
+    {
+      "id": "flash",
+      "name": "フラッシュ",
+      "description": "強烈な光で敵全体の目を眩ませる",
+      "skillType": "debuff",
+      "targetType": "enemy",
+      "range": "all",
+      "power": 0,
+      "powerType": "magical",
+      "element": "none",
+      "scaling": "matk",
+      "critRate": 0,
+      "cost": 8,
+      "costType": "mp",
+      "accuracy": 0.9,
+      "conditions": [
+        {
+          "conditionId": "blind",
+          "chance": 0.6
+        }
+      ],
+      "unlockLevel": 8,
+      "prerequisiteIds": [],
+      "isPassive": false
+    },
+    {
+      "id": "silence_spell",
+      "name": "サイレス",
+      "description": "敵単体の魔法（スキル）を封じる",
+      "skillType": "debuff",
+      "targetType": "enemy",
+      "range": "single",
+      "power": 0,
+      "powerType": "magical",
+      "element": "none",
+      "scaling": "matk",
+      "critRate": 0,
+      "cost": 6,
+      "costType": "mp",
+      "accuracy": 0.9,
+      "conditions": [
+        {
+          "conditionId": "silence",
+          "chance": 0.8
+        }
+      ],
+      "unlockLevel": 10,
+      "prerequisiteIds": [],
+      "isPassive": false
+    },
+    {
+      "id": "power_break",
+      "name": "パワーブレイク",
+      "description": "攻撃しつつ敵の攻撃力を下げる",
+      "skillType": "attack",
+      "targetType": "enemy",
+      "range": "single",
+      "power": 90,
+      "powerType": "physical",
+      "element": "none",
+      "scaling": "atk",
+      "critRate": 0.05,
+      "cost": 8,
+      "costType": "mp",
+      "accuracy": 0.95,
+      "conditions": [
+        {
+          "conditionId": "debuff_atk",
+          "chance": 0.65
+        }
+      ],
+      "unlockLevel": 12,
+      "prerequisiteIds": [
+        "attack_basic"
+      ],
+      "isPassive": false
+    },
+    {
+      "id": "armor_break",
+      "name": "アーマーブレイク",
+      "description": "攻撃しつつ敵の守備力を下げる",
+      "skillType": "attack",
+      "targetType": "enemy",
+      "range": "single",
+      "power": 90,
+      "powerType": "physical",
+      "element": "none",
+      "scaling": "atk",
+      "critRate": 0.05,
+      "cost": 8,
+      "costType": "mp",
+      "accuracy": 0.95,
+      "conditions": [
+        {
+          "conditionId": "debuff_def",
+          "chance": 0.65
+        }
+      ],
+      "unlockLevel": 12,
+      "prerequisiteIds": [
+        "attack_basic"
+      ],
+      "isPassive": false
+    },
+    {
+      "id": "slow",
+      "name": "スロウ",
+      "description": "敵単体の速度を下げる",
+      "skillType": "debuff",
+      "targetType": "enemy",
+      "range": "single",
+      "power": 0,
+      "powerType": "magical",
+      "element": "none",
+      "scaling": "matk",
+      "critRate": 0,
+      "cost": 6,
+      "costType": "mp",
+      "accuracy": 0.95,
+      "conditions": [
+        {
+          "conditionId": "debuff_speed",
+          "chance": 1.0
+        }
+      ],
+      "unlockLevel": 8,
+      "prerequisiteIds": [],
+      "isPassive": false
+    },
+    {
+      "id": "paralyze_whip",
+      "name": "麻痺攻撃",
+      "description": "敵単体にダメージ＋麻痺",
+      "skillType": "attack",
+      "targetType": "enemy",
+      "range": "single",
+      "power": 85,
+      "powerType": "physical",
+      "element": "none",
+      "scaling": "atk",
+      "critRate": 0.1,
+      "cost": 7,
+      "costType": "mp",
+      "accuracy": 0.95,
+      "conditions": [
+        {
+          "conditionId": "paralysis",
+          "chance": 0.4
+        }
+      ],
+      "unlockLevel": 10,
       "prerequisiteIds": [],
       "isPassive": false
     }

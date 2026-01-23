@@ -8,9 +8,9 @@ import { pushSystemLog } from "../stores/systemLog";
 const loading = ref(false);
 const error = ref("");
 const battle = computed(() => appState.battle);
-const log = computed(() => battle.value?.log ?? []);
-const logDisplay = computed(() => [...log.value].reverse());
+const logDisplay = computed(() => [...localLog.value].reverse());
 const systemLogDisplay = computed(() => [...(appState.systemLog ?? [])].reverse());
+const localLog = ref<string[]>([]);
 const masters = ref<any>(null);
 const username = computed(() => appState.user.username || "(unknown)");
 const floorLabel = computed(() => battle.value?.floor ?? appState.state?.currentFloor ?? 1);
@@ -45,12 +45,12 @@ const enemyNameMap = computed(() => {
   const map: Record<string, string> = {};
   for (const e of list) {
     const rawId = e?.id ?? "";
-    const id = getEnemyMasterId(rawId);
+    const id = e.name ?? rawId;
     total[id] = (total[id] ?? 0) + 1;
   }
   for (const e of list) {
     const rawId = e?.id ?? "";
-    const id = getEnemyMasterId(rawId);
+    const id = e.name ?? rawId;
     order[id] = (order[id] ?? 0) + 1;
     const baseName = e.name ?? id;
     map[rawId] = (total[id] ?? 0) > 1 ? `${baseName}${order[id]}` : baseName;
@@ -90,7 +90,8 @@ const availableSkills = computed(() => {
       return (actor.level ?? 1) >= (pre.unlockLevel ?? 1);
     });
   };
-  return byActor.filter((s) => isUnlocked(s) && prereqOk(s));
+  return byActor.filter((s) => isUnlocked(s) && prereqOk(s))
+    .sort((a, b) => (a.cost ?? 0) - (b.cost ?? 0));
 });
 const availableItems = computed(() => {
   if (!masters.value) return [];
@@ -197,12 +198,12 @@ const buildNameToId = (state: any) => {
   const order: Record<string, number> = {};
   for (const e of enemies) {
     const rawId = e?.id ?? "";
-    const id = getEnemyMasterId(rawId);
+    const id = e.name ?? rawId;
     total[id] = (total[id] ?? 0) + 1;
   }
   for (const e of enemies) {
     const rawId = e?.id ?? "";
-    const id = getEnemyMasterId(rawId);
+    const id = e.name ?? rawId;
     order[id] = (order[id] ?? 0) + 1;
     const baseName = e.name ?? id;
     localEnemyMap[rawId] = (total[id] ?? 0) > 1 ? `${baseName}${order[id]}` : baseName;
@@ -222,6 +223,10 @@ const buildNameToId = (state: any) => {
 const parseActionLine = (line: string) => {
   const attack = line.match(/^(.+) の攻撃！ (.+) に /);
   if (attack) return { actor: attack[1], target: attack[2] };
+  const miss = line.match(/^(.+) の(?:攻撃|.+)! ミス！/);
+  if (miss) return { actor: miss[1], target: "" };
+  const crit = line.match(/^(.+) の .+! 会心の一撃！ (.+) に/);
+  if (crit) return { actor: crit[1], target: crit[2] };
   const skill = line.match(/^(.+) の .+! (.+) に /);
   if (skill) return { actor: skill[1], target: skill[2] };
   const heal = line.match(/^(.+) は (.+) を回復した/);
@@ -240,12 +245,17 @@ const parseActionLine = (line: string) => {
 const animateFromLogs = async (lines: string[], state: any) => {
   const map = buildNameToId(state);
   for (const line of lines) {
+    localLog.value.push(line); // 1行ずつ追加
     const info = parseActionLine(line);
-    if (!info) continue;
+    // infoがなくてもウェイトはかけたいかもしれないが、一旦スキップ
+    if (!info) {
+      await sleep(300);
+      continue;
+    }
     const actorList = map.get(info.actor || "") ?? [];
     const targetList = map.get(info.target || "") ?? [];
     const actorId = actorList[0] ?? "";
-    const targetId = targetList[0] ?? "";
+    const targetId = targetList[0] ?? ""; // target is optional for miss/buff
     if (actorList.length > 1 && actorId) {
       actorList.push(actorList.shift() as string);
       map.set(info.actor || "", actorList);
@@ -255,8 +265,11 @@ const animateFromLogs = async (lines: string[], state: any) => {
       map.set(info.target || "", targetList);
     }
     enemyActing.value = true;
-    if (actorId) await popOnce([actorId], 1200);
-    if (targetId) await popOnce([targetId], 1200);
+    const p = [];
+    if (actorId) p.push(actorId);
+    if (targetId) p.push(targetId);
+    if (p.length > 0) await popOnce(p, 1000); // 少し短縮
+    else await sleep(500);
     enemyActing.value = false;
   }
 };
@@ -275,6 +288,7 @@ const startBattle = async () => {
       state: appState.state,
     });
     appState.battle = res.data;
+    localLog.value = [...(appState.battle?.log ?? [])]; // 初期同期
     uiMode.value = "command";
     cursorIndex.value = 0;
     pendingAction.value = null;
@@ -379,7 +393,12 @@ const doAct = async (action: any, targetIds: string[]) => {
   loading.value = true;
   error.value = "";
   try {
+
     const prevLogCount = battle.value?.log?.length ?? 0;
+    // localLog とのズレがあれば補正（本来はないはずだが念のため）
+    if (localLog.value.length < prevLogCount) {
+      localLog.value = battle.value?.log?.slice(0, prevLogCount) ?? [];
+    }
     const res = await api.actBattle({
       battleId: battle.value.battleId,
       actorId: nextActor()?.id,
@@ -446,19 +465,51 @@ const nextActor = () => {
   return b.actors[idx];
 };
 
+const hoverCombatantId = ref("");
+const getConditionName = (id: string) => {
+  if (!masters.value) return id;
+  const c = masters.value.conditions.data.find((x: any) => x.id === id);
+  return c?.name ?? id;
+};
+
+const getConditionTooltip = (combatantId: string) => {
+  if (!battle.value) return "";
+  const c = battle.value.actors.find((a: any) => a.id === combatantId);
+  if (!c) return "";
+  if (!c.conditions || c.conditions.length === 0) return "状態異常なし";
+  
+  return c.conditions
+    .map((cond: any) => {
+      const name = getConditionName(cond.id);
+      return `${name} (残り${cond.duration}ターン)`;
+    })
+    .join("\n");
+};
+
+const tooltipPos = ref({ x: 0, y: 0 });
+const setHover = (id: string, e: MouseEvent) => {
+  hoverCombatantId.value = id;
+  const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+  tooltipPos.value = { x: rect.right + 10, y: rect.top };
+};
+const clearHover = () => {
+  hoverCombatantId.value = "";
+};
+
 const hoverSkillId = ref("");
 const formatSkillDetail = (skill: any) => {
   if (!skill) return "";
-  const parts = [
-    skill.name,
-    `種別: ${skill.skillType ?? "-"}`,
-    `対象: ${skill.targetType ?? "-"}`,
-    `範囲: ${skill.range ?? "-"}`,
-    `威力: ${skill.power ?? 0}`,
-    `消費MP: ${skill.cost ?? 0}`,
-  ];
+  const parts = [];
+  parts.push(`[${skill.skillType ?? "-"}]`);
+  parts.push(`威力: ${skill.power ?? 0} / 消費: ${skill.cost ?? 0}`);
+  
   if (Array.isArray(skill.conditions) && skill.conditions.length > 0) {
-    parts.push(`効果: ${skill.conditions.join(", ")}`);
+    const conds = skill.conditions.map((c: any) => {
+      const name = getConditionName(c.conditionId);
+      const chance = Math.floor((c.chance ?? 1) * 100);
+      return `${name}(${chance}%)`;
+    });
+    parts.push(`追加効果: ${conds.join(", ")}`);
   }
   return parts.join("\n");
 };
@@ -503,7 +554,15 @@ const pickTargetsForItem = (itemId: string): string[] => {
   return livingParty.length ? [livingParty[0].id] : [];
 };
 
-// キーボード操作（矢印で選択、Enterで決定）
+
+
+const hoverItemId = ref("");
+const getItemDescription = (itemId: string) => {
+  if (!masters.value) return "";
+  const item = masters.value.items.data.find((i: any) => i.id === itemId);
+  return item?.description ?? "";
+};
+
 const handleKey = async (e: KeyboardEvent) => {
   if (loading.value) return;
   if (!battle.value) return;
@@ -631,11 +690,22 @@ if (!appState.battle) startBattle();
           class="status-card"
           :class="{ dead: p.currentHp <= 0, selected: selectedTarget === p.id, active: activeActorId === p.id, pop: isPopping(p.id) }"
           @click="selectedTarget = p.id"
+          @mouseenter="(e) => setHover(p.id, e)"
+          @mouseleave="clearHover"
         >
           <div class="name">{{ p.name }}</div>
           <div class="meta">Lv {{ p.level }}</div>
           <div>HP: {{ p.currentHp }} / {{ p.base.maxHp }}</div>
           <div>MP: {{ p.currentMp }} / {{ p.base.maxMp }}</div>
+          <div class="conditions" v-if="p.conditions && p.conditions.length > 0">
+            <span v-for="c in p.conditions" :key="c.id" class="cond-badge" :data-kind="c.kind">[{{ getConditionName(c.id).slice(0,1) }}]</span>
+          </div>
+          <teleport to="body">
+            <div v-if="hoverCombatantId === p.id" class="condition-tooltip" :style="{ top: tooltipPos.y + 'px', left: tooltipPos.x + 'px' }">
+              <div class="tooltip-title">{{ p.name }}</div>
+              <pre>{{ getConditionTooltip(p.id) }}</pre>
+            </div>
+          </teleport>
         </div>
       </div>
 
@@ -646,6 +716,8 @@ if (!appState.battle) startBattle();
           class="image-card"
           :class="{ dead: p.currentHp <= 0, selected: selectedTarget === p.id, active: activeActorId === p.id, pop: isPopping(p.id) }"
           @click="selectedTarget = p.id"
+          @mouseenter="(e) => setHover(p.id, e)"
+          @mouseleave="clearHover"
         >
           <img
             v-if="getImagePath(getPartyMaster(p.id), 'characters')"
@@ -666,6 +738,8 @@ if (!appState.battle) startBattle();
           class="image-card"
           :class="{ dead: e.currentHp <= 0, selected: selectedTarget === e.id, boss: getEnemyMaster(e.id)?.isBoss, active: activeActorId === e.id, pop: isPopping(e.id) }"
           @click="selectedTarget = e.id"
+          @mouseenter="(event) => setHover(e.id, event)"
+          @mouseleave="clearHover"
         >
           <img
             v-if="getImagePath(getEnemyMaster(e.id), 'enemies')"
@@ -685,10 +759,21 @@ if (!appState.battle) startBattle();
           class="status-card"
           :class="{ dead: e.currentHp <= 0, selected: selectedTarget === e.id, boss: getEnemyMaster(e.id)?.isBoss, active: activeActorId === e.id, pop: isPopping(e.id) }"
           @click="selectedTarget = e.id"
+          @mouseenter="(event) => setHover(e.id, event)"
+          @mouseleave="clearHover"
         >
           <div class="name">{{ enemyDisplayName(e.id, e.name) }}</div>
           <div class="meta">Lv {{ e.level }}</div>
           <div>HP: {{ e.currentHp }} / {{ e.base.maxHp }}</div>
+          <div class="conditions" v-if="e.conditions && e.conditions.length > 0">
+            <span v-for="c in e.conditions" :key="c.id" class="cond-badge" :data-kind="c.kind">[{{ getConditionName(c.id).slice(0,1) }}]</span>
+          </div>
+          <teleport to="body">
+            <div v-if="hoverCombatantId === e.id" class="condition-tooltip" :style="{ top: tooltipPos.y + 'px', left: tooltipPos.x + 'px' }">
+              <div class="tooltip-title">{{ enemyDisplayName(e.id, e.name) }}</div>
+              <pre>{{ getConditionTooltip(e.id) }}</pre>
+            </div>
+          </teleport>
         </div>
       </div>
     </div>
@@ -756,11 +841,14 @@ if (!appState.battle) startBattle();
             v-for="(it, idx) in availableItems"
             :key="it.id"
             :disabled="loading || (appState.state?.items?.[it.id] ?? 0) <= 0"
-            class="cmd"
+            class="cmd item-row"
             :class="{ selected: cursorIndex === Number(idx) + 1 }"
             @click="commitItemSelection(it)"
+            @mouseenter="hoverItemId = it.id"
+            @mouseleave="hoverItemId = ''"
           >
             {{ it.name }} (在庫: {{ appState.state?.items?.[it.id] ?? 0 }})
+            <span v-if="hoverItemId === it.id" class="item-tooltip">{{ getItemDescription(it.id) }}</span>
           </button>
           <small class="hint">↑↓で選択 / Enterで決定 / Escで戻る</small>
         </div>
@@ -837,11 +925,47 @@ button { padding: 8px 12px; }
   max-height: 400px;
   overflow-y: auto;
 }
+.conditions { display: flex; gap: 2px; flex-wrap: wrap; margin-top: 2px; }
+.cond-badge { font-size: 10px; padding: 1px 2px; border-radius: 2px; color: #000; font-weight: bold; background: #ddd; }
+.cond-badge[data-kind='dot'] { background: #f66; color: #fff; }
+.cond-badge[data-kind='stun'] { background: #fa0; color: #000; }
+.cond-badge[data-kind='silence'] { background: #a6f; color: #fff; }
+.cond-badge[data-kind='blind'] { background: #444; color: #ccc; }
+.cond-badge[data-kind='debuff'] { background: #88a; color: #fff; }
+.cond-badge[data-kind='buff'] { background: #6f9; color: #000; }
+.condition-tooltip {
+  position: fixed;
+  z-index: 10000;
+  background: rgba(0, 0, 0, 0.95);
+  border: 1px solid #666;
+  padding: 8px;
+  color: #fff;
+  pointer-events: none;
+  font-size: 12px;
+  white-space: pre-wrap;
+  box-shadow: 0 0 8px rgba(0,0,0,0.8);
+}
+.tooltip-title { font-weight: bold; margin-bottom: 4px; border-bottom: 1px solid #444; padding-bottom: 2px; }
 @keyframes pop-bounce {
   0% { transform: scale(1) translateY(0); }
   30% { transform: scale(1.25) translateY(-8px); }
   60% { transform: scale(1.18) translateY(0); }
   100% { transform: scale(1) translateY(0); }
+}
+.item-row { position: relative; }
+.item-tooltip {
+  position: absolute;
+  left: 100%;
+  top: 0;
+  margin-left: 8px;
+  z-index: 9999;
+  background: #111;
+  border: 1px solid #444;
+  padding: 6px 8px;
+  color: #fff;
+  min-width: 200px;
+  white-space: normal;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.6);
 }
 </style>
 

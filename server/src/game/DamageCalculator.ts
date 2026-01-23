@@ -5,7 +5,7 @@ type Skill = any; // master skill shape
 
 const randFloat = (min: number, max: number) => Math.random() * (max - min) + min;
 
-export function calcAttackDamage(attacker: Combatant, defender: Combatant) {
+export function calcAttackDamage(attacker: Combatant, defender: Combatant): { damage: number; isHit: boolean; isCritical: boolean } {
   const atkStats = getEffectiveStats(attacker);
   const defStats = getEffectiveStats(defender);
   // 防御力による詰みを防ぐ減衰式: ATK^2 / (ATK + DEF*0.5)
@@ -13,11 +13,21 @@ export function calcAttackDamage(attacker: Combatant, defender: Combatant) {
   // レベル倍率を調整（Lv100で約511倍）
   const lvl = 1 + attacker.level * 0.1 + Math.pow(attacker.level, 2) * 0.05;
   const variance = randFloat(0.9, 1.1);
+  // accuracy check for normal attack (default 95%)
+  let hitRate = 0.95;
+  if (attacker.conditions?.some((c) => c.kind === "blind")) {
+    hitRate *= 0.5;
+  }
+  if (Math.random() > hitRate) {
+    return { damage: 0, isHit: false, isCritical: false }; // miss
+  }
+
   let damage = Math.floor(Math.max(1, base) * lvl * variance);
-  return applyDefense(damage, defender.guard);
+  damage = applyDefense(damage, defender.guard);
+  return { damage, isHit: true, isCritical: false };
 }
 
-export function calcSkillDamage(attacker: Combatant, defender: Combatant, skill: Skill) {
+export function calcSkillDamage(attacker: Combatant, defender: Combatant, skill: Skill): { damage: number; isHit: boolean; isCritical: boolean } {
   const atkStats = getEffectiveStats(attacker);
   const defStats = getEffectiveStats(defender);
   const stat = skill.powerType === "magical" ? atkStats.matk : atkStats.atk;
@@ -29,14 +39,21 @@ export function calcSkillDamage(attacker: Combatant, defender: Combatant, skill:
   const variance = randFloat(0.9, 1.1);
   let damage = Math.floor(Math.max(1, base) * lvl * variance);
   // accuracy
-  if (Math.random() > (skill.accuracy ?? 1)) {
-    damage = 0;
+  let acc = skill.accuracy ?? 1;
+  if (attacker.conditions?.some((c) => c.kind === "blind")) {
+    acc *= 0.5;
+  }
+  if (Math.random() > acc) {
+    return { damage: 0, isHit: false, isCritical: false };
   }
   // crit
+  let isCritical = false;
   if (damage > 0 && Math.random() < (skill.critRate ?? 0)) {
     damage = Math.floor(damage * (skill.critMag ?? 1.5));
+    isCritical = true;
   }
-  return applyDefense(damage, defender.guard);
+  damage = applyDefense(damage, defender.guard);
+  return { damage, isHit: true, isCritical };
 }
 
 export function calcHealing(attacker: Combatant, power: number) {
