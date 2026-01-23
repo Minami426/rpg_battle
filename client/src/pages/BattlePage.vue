@@ -822,9 +822,9 @@ button { padding: 8px 12px; }
 .party-status, .enemy-status { overflow-y: auto; }
 .skill-tooltip {
   position: absolute;
-  left: 100%;
-  top: 0;
-  margin-left: 8px;
+  right: 100%;
+  bottom: 0;
+  margin-right: 8px;
   z-index: 9999;
   white-space: pre-line;
   background: #111;
@@ -832,7 +832,10 @@ button { padding: 8px 12px; }
   color: #fff;
   padding: 6px 8px;
   min-width: 180px;
+  max-width: 300px;
   box-shadow: 0 0 6px rgba(0, 0, 0, 0.6);
+  max-height: 400px;
+  overflow-y: auto;
 }
 @keyframes pop-bounce {
   0% { transform: scale(1) translateY(0); }
